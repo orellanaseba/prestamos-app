@@ -1,20 +1,17 @@
-import { HamburgerIcon } from "./HamburguerIcon"
+import { WhatsappIcon } from "./WhatsappIcon"
 
 export const Header = () => {
     return (
-        <header className="flex justify-center items-center min-h-12 relative border-b-2 border-b-zinc-200">
-            <HamburgerIcon />
-            <a className="font-bold text-lg tracking-wide text-[#2a37d8]" href="#">Prestamón</a>
-            <nav className="hidden md:flex bg-red-500">
-                <ul>
-                    <li>Pedir un prestamo</li>
-                    <li>Contacto</li>
-                </ul>
-            </nav>
-            <div className="hidden md:flex">
-                <a href="#">Registrarse</a>
-                <a href="#">Iniciar sesión</a>
+        <header className="fixed w-full -mt-12 z-50 bg-white flex justify-around items-center min-h-12 border-b-2 border-b-zinc-200">
+            <div className="flex absolute left-7 md:left-20">
+                <WhatsappIcon />
             </div>
+            <a className="font-bold text-lg tracking-wide text-[#2a37d8]" href="#">Prestamón</a>
+            <button className="w-20 right-2 md:block absolute text-xs md:text-sm md:w-36 border-[1px] border-zinc-300 text-white bg-[#3648f5] hover:bg-[#2a37d8] font-semibold p-2 md:right-5 rounded-md min-h-8">
+                <a href="https://wa.me/1128172947/?text=Quisiera%20más%20información%20sobre%20los%20préstamos.%20Gracias!">
+                Consultar
+                </a>
+                </button>
         </header>
     )
 }
