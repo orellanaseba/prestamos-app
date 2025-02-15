@@ -1,7 +1,5 @@
 import Image from "next/image";
 import { Accordeon, Card } from "./components/Card";
-import { WhatsappIcon } from "./components/WhatsappIcon";
-import { GmailIcon } from "./components/GmailIcon";
 
 export default function Home() {
   return (
