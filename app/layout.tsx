@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { Montserrat } from "next/font/google";
 import "./globals.css";
 import { Header } from "./components/Header";
-import { Footer } from "./components/Footer";
+// import { Footer } from "./components/Footer";
 
 // Main color: #627dff
 
@@ -11,6 +11,8 @@ export const metadata: Metadata = {
   title: "Prestamón | Web App",
   description: "Aplicación web para hacer prestamos a las personas.",
 };
+
+
 
 const montserrat = Montserrat({ subsets: ["latin"] })
 
@@ -22,11 +24,11 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`${montserrat.className} antialiased bg-zinc-100 relative mt-12`}
+        className={`${montserrat.className} antialiased bg-zinc-100 mt-12`}
       >
         <Header />
         {children}
-        <Footer />
+        {/* <Footer /> */}
       </body>
     </html>
   );
