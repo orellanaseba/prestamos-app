@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { Client } from "@/app/types";
+import { mock } from "@/app/mock";
 
 const Deal = () => {
 
@@ -9,7 +10,7 @@ const Deal = () => {
 
     useEffect(() => {
         const getClients = localStorage.getItem("clients")
-        const result = getClients ? JSON.parse(getClients) : [];
+        const result = getClients ? JSON.parse(getClients) : mock;
         setClients(result);
     }, [])
 
