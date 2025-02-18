@@ -32,14 +32,13 @@ const mock: Client[] = [
 const Clients = () => {
     const [openModal, setIsOpenModal] = useState(false);
     const [clientName, setClientName] = useState("");
+    const [error, setError] = useState(false);
 
     const [clients, setClients] = useState(mock);
 
     const handleOpenModal = () => {
         setIsOpenModal(!openModal);
     }
-
-    console.log(clients);
 
     const filteredClients = clients.filter(client => (
         client.nombre.toLowerCase().includes(clientName.toLowerCase())
@@ -53,7 +52,8 @@ const Clients = () => {
                         <h2 className="font-semibold">Clientes</h2>
                         <PlusIcon handleOpenModal={handleOpenModal} />
                     </div>
-                    { openModal && <FormClient clients={clients} setClients={setClients} /> }
+                    { openModal && <FormClient clients={clients} setClients={setClients} setError={setError} /> }
+                    { error && <p className="p-1 text-red-500">El DNI ya está en uso.</p> }
                 </article>
             </section>
 

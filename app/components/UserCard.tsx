@@ -1,16 +1,22 @@
 "use client"
 
+import { useState } from "react";
 import { Client } from "../types"
 import { DotsIcon } from "./DotsIcon";
-// import { Options } from "./Options";
+import { Options } from "./Options";
 
 interface ClientProps {
     clients: Client[];
 }
 
 export const UserCard = ({ clients }: ClientProps) => {
-    
+    const [id, setId] = useState<string | null>("");
+
     // Arreglar el botón "options";
+
+    const handleOpenOptions = (newId: string) => {
+        setId(newId !== id ? newId : null);
+    }
     
     return (
         <>
@@ -22,9 +28,9 @@ export const UserCard = ({ clients }: ClientProps) => {
                 <div className="flex justify-around items-center text-xs uppercase min-h-8 relative">
                     <span>Nombre</span>
                     <span>DNI</span>
-                    <DotsIcon />
+                    <DotsIcon setId={() => handleOpenOptions(client.dni)} />
                 </div>
-                {/* { openOptions && <Options /> } */}
+                { id === client.dni && <Options /> }
 
                 <div className="flex justify-around items-center p-1">
                     <span title={ client.nombre } className="max-w-32 text-xs overflow-hidden text-ellipsis font-semibold">{ client.nombre }</span>

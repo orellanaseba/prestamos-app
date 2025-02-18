@@ -3,7 +3,11 @@ import { Button } from "./Button"
 import { Input } from "./Input"
 import { Client } from "../types"
 
-export const FormClient = ({ clients, setClients }: { clients: Client[]; setClients: (data: Client[]) => void }) => {
+export const FormClient = 
+    ({ clients, setClients, setError }
+    : 
+    { clients: Client[]; setClients: (data: Client[]) => void; setError: (error: boolean) => void; }) => {
+    
     const handleFormData = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         const formData = new FormData(e.currentTarget);
@@ -13,10 +17,22 @@ export const FormClient = ({ clients, setClients }: { clients: Client[]; setClie
             email: formData.get("email") as string,
             numero_telefono: formData.get("numero_telefono") as string
         };
-        setClients([
-            ...clients,
-            data
-        ])
+        
+        const matchDni = clients.find(client => {
+            return client.dni === data.dni;
+        })
+
+        if(matchDni) {
+            setError(true)
+            console.log(matchDni);
+        }
+        else {
+            setError(false);
+            setClients([
+                ...clients,
+                data
+            ])
+        }
     }
 
     return (
