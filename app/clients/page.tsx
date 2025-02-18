@@ -1,6 +1,6 @@
 "use client"
 
-import React, { useState } from "react";
+import { useEffect, useState } from "react";
 import { PlusIcon } from "../components/PlusIcon";
 import { FormClient } from "../components/FormClient";
 
@@ -33,8 +33,20 @@ const Clients = () => {
     const [openModal, setIsOpenModal] = useState(false);
     const [clientName, setClientName] = useState("");
     const [error, setError] = useState(false);
+    const [clientSelected, setClientSelected] = useState(false);
 
-    const [clients, setClients] = useState(mock);
+    const [clients, setClients] = useState<Client[]>(mock);
+
+    useEffect(() => {
+        const getItem = localStorage.getItem("clients");
+        const result = getItem ? JSON.parse(getItem) : mock;
+        setClients(result);
+    }, [])
+    
+    const handleClientSelected = () => {
+        setClientSelected(!clientSelected);
+    }
+
 
     const handleOpenModal = () => {
         setIsOpenModal(!openModal);
@@ -57,11 +69,14 @@ const Clients = () => {
                 </article>
             </section>
 
-            <section className="flex flex-col items-center gap-2 bg-white w-full h-96 mt-5 p-1">
-                <article className="flex justify-center items-center w-72">
+            <section className="flex flex-col items-center justify-start gap-2 bg-white w-full h-96 mt-5 overflow-y-scroll">
+                <article className="sticky top-0 z-20 flex justify-center items-center w-full bg-white p-1">
                     <Input setClientName={setClientName} name="search" type="text" placeholder="Buscar cliente" />
                 </article>
-                <UserCard clients={filteredClients} />
+                <article className="flex flex-col items-center w-72 gap-2">
+                    <UserCard handleClientSelected={handleClientSelected} clients={filteredClients} />
+                    { clientSelected && <div className="bg-red-500 h-20 w-20">Card</div> }
+                </article>
             </section>
         </main>
     )

@@ -7,12 +7,11 @@ import { Options } from "./Options";
 
 interface ClientProps {
     clients: Client[];
+    handleClientSelected: () => void;
 }
 
-export const UserCard = ({ clients }: ClientProps) => {
+export const UserCard = ({ clients, handleClientSelected }: ClientProps) => {
     const [id, setId] = useState<string | null>("");
-
-    // Arreglar el botón "options";
 
     const handleOpenOptions = (newId: string) => {
         setId(newId !== id ? newId : null);
@@ -23,7 +22,10 @@ export const UserCard = ({ clients }: ClientProps) => {
         { clients.length > 0 ? (
         clients.map(client => (
 
-        <article key={ client.dni } className="bg-white flex flex-col w-full min-h-16 shadow-sm border-zinc-200 border-[1px] relative">
+        <article
+        onClick={handleClientSelected}
+        key={ client.dni }
+        className="bg-white flex flex-col w-full min-h-16 shadow-sm border-zinc-200 border-[1px] relative">
             <div className="flex flex-col justify-around font-semibold overflow-x-hidden">
                 <div className="flex justify-around items-center text-xs uppercase min-h-8 relative">
                     <span>Nombre</span>

@@ -11,7 +11,7 @@ const Dashboard = () => {
             </article>
         </section>
 
-        <section className="relative mt-5 overflow-y-scroll flex flex-col items-center justify-start gap-2 bg-white shadow-md rounded-md w-72 h-72">
+        <section className="relative mt-5 overflow-y-scroll flex flex-col items-center justify-start gap-2 bg-white shadow-md rounded-md w-72 h-96">
             <div className="sticky top-0 z-40 w-full min-h-10 flex justify-center items-center bg-white">
                 <h2 className="text-xl font-semibold">Historial</h2>
             </div>

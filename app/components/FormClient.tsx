@@ -1,4 +1,3 @@
-import React from "react"
 import { Button } from "./Button"
 import { Input } from "./Input"
 import { Client } from "../types"
@@ -28,10 +27,9 @@ export const FormClient =
         }
         else {
             setError(false);
-            setClients([
-                ...clients,
-                data
-            ])
+            const newItem = [...clients, data]
+            localStorage.setItem("clients", JSON.stringify(newItem))
+            setClients(newItem)
         }
     }
 

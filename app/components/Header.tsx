@@ -18,10 +18,11 @@ const AsideMenu = () => {
 
     return (
         <aside className="flex flex-col bg-white absolute top-0 left-0 w-full md:w-72 h-[100vh]">
-            <ul className="mt-10 w-56 h-96 flex flex-col justify-around p-1 font-semibold text-xl">
+            <ul className="mt-10 w-56 h-96 flex flex-col justify-around p-2 font-semibold text-xl">
                 <MenuLink href="/dashboard" text="Inicio" />
-                <MenuLink href="/#" text="Historial" />
                 <MenuLink href="/clients" text="Clientes" />
+                <MenuLink href="/clients/deal" text="Préstamos" />
+                <MenuLink href="/#" text="Historial" />
                 <MenuLink href="#" text="Configuración" />
                 <MenuLink href="#" text="Cerrar sesión" />
             </ul>
