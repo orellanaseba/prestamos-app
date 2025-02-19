@@ -45,7 +45,9 @@ export const Header = () => {
             {isOpen ? <AsideMenu /> : null}
 
             {path !== "/" ? (
-                <Hamburger styles={isOpen ? "rotate-90" : ""} handleOpenMenu={handleOpenMenu} />
+                <>
+                    <Hamburger styles={isOpen ? "rotate-90" : ""} handleOpenMenu={handleOpenMenu} />
+                </>
             ) : (
             <>
             <div className="flex absolute left-7 md:left-20">

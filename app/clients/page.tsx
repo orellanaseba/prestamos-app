@@ -13,8 +13,6 @@ const Clients = () => {
     const [openModal, setIsOpenModal] = useState(false);
     const [clientName, setClientName] = useState("");
     const [error, setError] = useState(false);
-    const [clientSelected, setClientSelected] = useState(false);
-
     const [clients, setClients] = useState<Client[]>(mock);
 
     useEffect(() => {
@@ -23,11 +21,6 @@ const Clients = () => {
         setClients(result);
     }, [])
     
-    const handleClientSelected = () => {
-        setClientSelected(!clientSelected);
-    }
-
-
     const handleOpenModal = () => {
         setIsOpenModal(!openModal);
     }
@@ -54,8 +47,7 @@ const Clients = () => {
                     <Input setClientName={setClientName} name="search" type="text" placeholder="Buscar cliente" />
                 </article>
                 <article className="flex flex-col items-center w-72 gap-2">
-                    <UserCard handleClientSelected={handleClientSelected} clients={filteredClients} />
-                    { clientSelected && <div className="bg-red-500 h-20 w-20">Card</div> }
+                    <UserCard clients={filteredClients} />
                 </article>
             </section>
         </main>

@@ -7,10 +7,9 @@ import { Options } from "./Options";
 
 interface ClientProps {
     clients: Client[];
-    handleClientSelected: () => void;
 }
 
-export const UserCard = ({ clients, handleClientSelected }: ClientProps) => {
+export const UserCard = ({ clients }: ClientProps) => {
     const [id, setId] = useState<string | null>("");
 
     const handleOpenOptions = (newId: string) => {
@@ -23,7 +22,6 @@ export const UserCard = ({ clients, handleClientSelected }: ClientProps) => {
         clients.map(client => (
 
         <article
-        onClick={handleClientSelected}
         key={ client.dni }
         className="bg-white flex flex-col w-full min-h-16 shadow-sm border-zinc-200 border-[1px] relative">
             <div className="flex flex-col justify-around font-semibold overflow-x-hidden">

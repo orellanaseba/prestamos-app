@@ -35,6 +35,7 @@ export const FormClient =
 
     return (
         <form onSubmit={handleFormData} className="flex flex-col items-center p-1 gap-2 w-72 min-h-32">
+            <span>Nuevo cliente</span>
             <Input name="nombre" type="text" placeholder="Nombre y apellido del cliente" />
             <Input name="dni" type="number" placeholder="DNI" />
             <Input name="email" type="email" placeholder="Correo electrónico" />
