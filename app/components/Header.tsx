@@ -22,7 +22,7 @@ const AsideMenu = () => {
                 <MenuLink href="/dashboard" text="Inicio" />
                 <MenuLink href="/clients" text="Clientes" />
                 <MenuLink href="/clients/deal" text="Préstamos" />
-                <MenuLink href="/#" text="Historial" />
+                <MenuLink href="#" text="Historial" />
                 <MenuLink href="#" text="Configuración" />
                 <MenuLink href="#" text="Cerrar sesión" />
             </ul>

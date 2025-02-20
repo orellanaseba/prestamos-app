@@ -6,8 +6,6 @@ export const FormClient = ({ setError } : { setError: (error: boolean) => void; 
 
     const clients = useAppStore((state) => state.clients);
     const addClient = useAppStore((state) => state.addClient);
-
-    console.log(clients);
     
     const handleFormData = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();

@@ -9,13 +9,15 @@ const Deal = () => {
 
     const clients = useAppStore((state) => state.clients);
 
+    // const styles = "p-2 bg-white border-[1px] border-zinc-300 focus:bg-zinc-100 outline-none w-full text-sm rounded-md shadow-xs"
+
     console.log("DEAL CLIENTS:", clients);
 
     return (
         <main className="flex flex-col items-center min-h-96 w-full">
             <section className="flex flex-col items-center mt-2 gap-2 bg-white w-72 rounded-md border-[1px] border-zinc-300 p-2">
             <span className="text-center">Nuevo préstamo</span>
-            <Input name="monto_prestamo" type="number" placeholder="Monto del préstamo" />
+            <input name="monto_prestamo" type="number" placeholder="Monto del préstamo" />
             <select name="prestamo_datos" className="p-2 bg-white border-[1px] border-zinc-300 focus:bg-zinc-100 outline-none w-full text-sm rounded-md shadow-xs min-h-10">
                 <option defaultValue="Cantidad de cuotas">Cantidad de cuotas</option>
                 <option value="pago_unico">Pago único</option>
@@ -24,11 +26,11 @@ const Deal = () => {
             </select>
             <Input name="interes" type="number" placeholder="Porcentaje de interés" />
             <select name="clients" className="p-2 bg-white border-[1px] border-zinc-300 focus:bg-zinc-100 outline-none w-full text-sm rounded-md shadow-xs min-h-10">
-                    <option defaultValue="Seleccionar cliente">Seleccionar cliente</option>
+                    <option defaultValue="Seleccionar cliente">{clients.length > 0 ? "Seleccionar cliente" : "No hay clientes disponibles"}</option>
                 {clients.length > 0 ? (clients.map((client: Client) => (
                     <option key={client.dni} value={client.dni}>{client.nombre} - {client.dni}</option>
                 ))
-                ) : <option>No hay clientes disponibles</option>}
+                ) : null}
             </select>
             <div className="flex flex-col justify-start w-full">
                 <span>Fecha de emisión</span>
