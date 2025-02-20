@@ -1,25 +1,18 @@
 "use client"
 
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { PlusIcon } from "../components/PlusIcon";
 import { FormClient } from "../components/FormClient";
 
-import { Client } from "../types";
 import { UserCard } from "../components/UserCard";
 import { Input } from "../components/Input";
-import { mock } from "../mock";
+import { useAppStore } from "../store/useAppStore";
 
 const Clients = () => {
     const [openModal, setIsOpenModal] = useState(false);
     const [clientName, setClientName] = useState("");
     const [error, setError] = useState(false);
-    const [clients, setClients] = useState<Client[]>(mock);
-
-    useEffect(() => {
-        const getItem = localStorage.getItem("clients");
-        const result = getItem ? JSON.parse(getItem) : mock;
-        setClients(result);
-    }, [])
+    const clients = useAppStore((state) => state.clients);
     
     const handleOpenModal = () => {
         setIsOpenModal(!openModal);
@@ -37,13 +30,13 @@ const Clients = () => {
                         <h2 className="font-semibold">Clientes</h2>
                         <PlusIcon handleOpenModal={handleOpenModal} />
                     </div>
-                    { openModal && <FormClient clients={clients} setClients={setClients} setError={setError} /> }
+                    { openModal && <FormClient setError={setError} /> }
                     { error && <p className="p-1 text-red-500">El DNI ya está en uso.</p> }
                 </article>
             </section>
 
             <section className="flex flex-col items-center justify-start gap-2 bg-white w-full h-96 mt-5 overflow-y-scroll">
-                <article className="sticky top-0 z-20 flex justify-center items-center w-full bg-white p-1">
+                <article className="sticky top-0 z-20 flex justify-center items-center w-72 bg-white p-1">
                     <Input setClientName={setClientName} name="search" type="text" placeholder="Buscar cliente" />
                 </article>
                 <article className="flex flex-col items-center w-72 gap-2">

@@ -1,20 +1,15 @@
 "use client"
 
-import { useEffect, useState } from "react";
 import { Client } from "@/app/types";
-import { mock } from "@/app/mock";
 import { Input } from "@/app/components/Input";
 import { Button } from "@/app/components/Button";
+import { useAppStore } from "@/app/store/useAppStore";
 
 const Deal = () => {
 
-    const [clients, setClients] = useState<Client[]>([])
+    const clients = useAppStore((state) => state.clients);
 
-    useEffect(() => {
-        const getClients = localStorage.getItem("clients")
-        const result = getClients ? JSON.parse(getClients) : mock;
-        setClients(result);
-    }, [])
+    console.log("DEAL CLIENTS:", clients);
 
     return (
         <main className="flex flex-col items-center min-h-96 w-full">
@@ -38,8 +33,8 @@ const Deal = () => {
             <div className="flex flex-col justify-start w-full">
                 <span>Fecha de emisión</span>
                 <Input name="fecha_emision" type="date" placeholder="" />
-                <span>Fecha límite  </span>
-                <Input name="fecha_emision" type="date" placeholder="" />
+                <span>Fecha de pago</span>
+                <Input name="fecha_pago" type="date" placeholder="" />
             </div>
 
             <Button text="Otorgar préstamo" />

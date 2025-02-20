@@ -1,11 +1,13 @@
 import { Button } from "./Button"
 import { Input } from "./Input"
-import { Client } from "../types"
+import { useAppStore } from "../store/useAppStore";
 
-export const FormClient = 
-    ({ clients, setClients, setError }
-    : 
-    { clients: Client[]; setClients: (data: Client[]) => void; setError: (error: boolean) => void; }) => {
+export const FormClient = ({ setError } : { setError: (error: boolean) => void; }) => {
+
+    const clients = useAppStore((state) => state.clients);
+    const addClient = useAppStore((state) => state.addClient);
+
+    console.log(clients);
     
     const handleFormData = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
@@ -27,9 +29,7 @@ export const FormClient =
         }
         else {
             setError(false);
-            const newItem = [...clients, data]
-            localStorage.setItem("clients", JSON.stringify(newItem))
-            setClients(newItem)
+            addClient(data);
         }
     }
 
