@@ -11,7 +11,7 @@ import { useAppStore } from "../store/useAppStore";
 const Clients = () => {
     const [openModal, setIsOpenModal] = useState(false);
     const [clientName, setClientName] = useState("");
-    const [error, setError] = useState(false);
+    const [error, setError] = useState<{ message: string }[]>([]);
     const clients = useAppStore((state) => state.clients);
     
     const handleOpenModal = () => {
@@ -31,7 +31,11 @@ const Clients = () => {
                         <PlusIcon handleOpenModal={handleOpenModal} />
                     </div>
                     { openModal && <FormClient setError={setError} /> }
-                    { error && <p className="p-1 text-red-500">El DNI ya está en uso.</p> }
+                    { error.length > 0 ? (
+                        error.map((err, i) => (
+                            <span className="text-xs w-72 p-1 text-red-500 font-bold" key={i}>{ err.message }</span>
+                        ))
+                    ) : null }
                 </article>
             </section>
 

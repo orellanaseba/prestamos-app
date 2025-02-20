@@ -1,8 +1,10 @@
 import { Button } from "./Button"
 import { Input } from "./Input"
 import { useAppStore } from "../store/useAppStore";
+import { clientSchema } from "../schemas/clientSchema";
+import { ZodError } from "zod";
 
-export const FormClient = ({ setError } : { setError: (error: boolean) => void; }) => {
+export const FormClient = ({ setError } : { setError: (error: { message: string }[]) => void; }) => {
 
     const clients = useAppStore((state) => state.clients);
     const addClient = useAppStore((state) => state.addClient);
@@ -21,13 +23,34 @@ export const FormClient = ({ setError } : { setError: (error: boolean) => void; 
             return client.dni === data.dni;
         })
 
-        if(matchDni) {
-            setError(true)
-            console.log(matchDni);
-        }
-        else {
-            setError(false);
-            addClient(data);
+        const matchEmail = clients.find(client => {
+            return client.email === data.email;
+        })
+        
+        try {
+            const validateData = clientSchema.parse(data);
+
+            if(matchDni) {
+                alert("El DNI ya está en uso.")
+                return;
+            }
+
+            if(matchEmail) {
+                alert("El email ya está en uso.")
+                return;
+            }
+            
+            if(validateData) {
+                setError([]);
+                addClient(data);
+            }
+        
+        } catch (error) {
+            if (error instanceof ZodError) {
+                setError(error.errors.map(err => ({ message: err.message })));
+            } else if (error instanceof Error) {
+                setError([{ message: error.message }]);
+            }
         }
     }
 
