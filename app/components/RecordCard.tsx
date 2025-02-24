@@ -16,7 +16,7 @@ export const RecordCard = () => {
         <>
         { loans.length > 0 ? (
             loans.map(client => (
-        <article key={client.id_loan} className="bg-white flex flex-col w-full min-h-16 shadow-sm border-zinc-200 border-[1px]">
+        <article key={client.id_loan} className="bg-white flex flex-col w-full min-h-16 shadow-sm border-zinc-200 border-[1px] rounded-md">
             
             <div className="flex flex-col justify-around font-semibold overflow-x-hidden">
                 <div className="flex justify-around items-center text-xs uppercase min-h-8 relative">

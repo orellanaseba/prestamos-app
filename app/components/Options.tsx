@@ -1,13 +1,13 @@
 "use client"
-import { useState } from "react"
 import { DeleteIcon } from "./DeleteIcon"
 import { EditIcon } from "./EditIcon"
+import { useAppStore } from "../store/useAppStore"
 
-export const Options = () => {
-    const [btnDelete, setBtnDelete] = useState(false);
+export const Options = ({ id } : { id: string; }) => {
+    const deleteClient = useAppStore((state) => state.deleteClient);
 
     const handleBtnDelete = () => {
-        setBtnDelete(!btnDelete);
+        deleteClient(id);
     }
 
     return (

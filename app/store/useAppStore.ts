@@ -6,6 +6,7 @@ interface AppState {
     clients: Client[];
     loans: Loan[];
     addClient: (client: Client) => void;
+    deleteClient: (dni: string) => void;
     newLoan: (loan: Loan) => void;
     updateStock: (stock: number) => void;
 }
@@ -15,6 +16,9 @@ export const useAppStore = create<AppState>((set) => ({
     clients: [],
     loans: [],
     addClient: (client) => set((state) => ({clients: [...state.clients, client] })),
+    deleteClient: (dni) => set((state) => ({
+        clients: state.clients.filter(client => client.dni !== dni)
+    })),
     newLoan: (loan) => set((state) => ({ loans: [...state.loans, loan] })),
     updateStock: (newStock) => set(() => ({ stock: newStock }))
 }))

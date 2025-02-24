@@ -3,7 +3,8 @@ import { z } from "zod";
 export const clientSchema = z.object({
     nombre: z.string()
     .min(5, { message: "El nombre debe tener mínimo 5 caracteres." })
-    .max(30, { message: "El nombre no puede contener más de 30 caracteres." }),
+    .max(30, { message: "El nombre no puede contener más de 30 caracteres." })
+    .regex(/^[a-zA-Z]+$/, { message: "El nombre solo puede contener letras." }),
 
     dni: z.string()
     .min(8, { message: "El DNI debe contener 8 números sin puntos ni comas." })
@@ -22,5 +23,4 @@ export const loanSchema = z.object({
     monto_prestamo: z.string()
     .min(4, { message: "El monto mínimo son $1000." })
     .regex(/^[^.,]+$/, { message: "El monto no debe contener puntos ni comas." }),
-
 })

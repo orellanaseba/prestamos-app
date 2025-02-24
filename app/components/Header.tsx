@@ -53,7 +53,11 @@ export const Header = () => {
 
             {path !== "/" ? (
                 <>
-                    <Hamburger styles={isOpen ? "rotate-90" : ""} handleOpenMenu={handleOpenMenu} />
+                <Hamburger styles={isOpen ? "rotate-90" : ""} handleOpenMenu={handleOpenMenu} />
+                <div className="absolute right-5 flex flex-col items-center">
+                    <Image onClick={handleOpenStock} className="w-5" src="/icons/dollar.png" width={24} height={24} alt="dollar icon" />
+                    {openStock && <Stock />}
+                </div>
                 </>
             ) : (
             <>
@@ -70,10 +74,7 @@ export const Header = () => {
             )}
             <Link className="font-bold text-lg tracking-wide text-[#2a37d8]" href="/dashboard">Prestamón</Link>
 
-            <div className="absolute right-5 flex flex-col items-center">
-                <Image onClick={handleOpenStock} className="w-5" src="/icons/dollar.png" width={24} height={24} alt="dollar icon" />
-                {openStock && <Stock />}
-            </div>
+            
 
         </header>
     )

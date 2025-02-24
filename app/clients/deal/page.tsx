@@ -82,9 +82,9 @@ const Deal = () => {
                 <option value="2">Dos cuotas</option>
                 <option value="3">Tres cuotas</option>
             </select>
-            <input className={STYLES} name="interes" defaultValue={0} type="number" placeholder="Porcentaje de interés" min={0} max={100} />
+            <input className={STYLES} name="interes" type="number" placeholder="Porcentaje de interés" min={0} max={100} />
             <select name="dni_cliente" className="p-2 bg-white border-[1px] border-zinc-300 focus:bg-zinc-100 outline-none w-full text-sm rounded-md shadow-xs min-h-10">
-                    <option disabled={true} defaultValue="Seleccionar cliente">{clients.length > 0 ? "Seleccionar cliente" : "No hay clientes disponibles"}</option>
+                    <option disabled defaultValue="Seleccionar cliente">{clients.length > 0 ? "Seleccionar cliente" : "No hay clientes disponibles"}</option>
                 {clients.length > 0 ? (clients.map((client: Client) => (
                     <option key={client.dni} value={`${client.dni}`}>{client.nombre} - {client.dni}</option>
                 ))
