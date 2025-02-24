@@ -5,6 +5,8 @@ import { WhatsappIcon } from "./WhatsappIcon"
 import { usePathname } from "next/navigation";
 import { Hamburger } from "./Hamburger";
 import { useState } from "react";
+import Image from "next/image";
+import { Stock } from "./Stock";
 
 const MenuLink = ({ href, text } : { href: string; text: string }) => {
     const pathname = usePathname();
@@ -17,7 +19,7 @@ const MenuLink = ({ href, text } : { href: string; text: string }) => {
 const AsideMenu = () => {
 
     return (
-        <aside className="flex flex-col bg-white absolute top-0 left-0 w-full md:w-72 h-[100vh]">
+        <aside className="flex flex-col bg-white absolute top-0 left-0 w-full md:w-72 h-[100vh] z-40">
             <ul className="mt-10 w-56 h-96 flex flex-col justify-around p-2 font-semibold text-xl">
                 <MenuLink href="/dashboard" text="Inicio" />
                 <MenuLink href="/clients" text="Clientes" />
@@ -34,9 +36,14 @@ export const Header = () => {
     const path = usePathname();
 
     const [isOpen, setIsOpen] = useState(false);
+    const [openStock, setIsOpenStock] = useState(false);
 
     const handleOpenMenu = () => {
         setIsOpen(!isOpen);
+    }
+
+    const handleOpenStock = () => {
+        setIsOpenStock(prev => !prev);
     }
     
     return (
@@ -62,6 +69,11 @@ export const Header = () => {
 
             )}
             <Link className="font-bold text-lg tracking-wide text-[#2a37d8]" href="/dashboard">Prestamón</Link>
+
+            <div className="absolute right-5 flex flex-col items-center">
+                <Image onClick={handleOpenStock} className="w-5" src="/icons/dollar.png" width={24} height={24} alt="dollar icon" />
+                {openStock && <Stock />}
+            </div>
 
         </header>
     )

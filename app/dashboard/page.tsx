@@ -1,13 +1,18 @@
+"use client"
+
 import { RecordCard } from "../components/RecordCard";
+import { useAppStore } from "../store/useAppStore";
 
 const Dashboard = () => {
 
+    const loans = useAppStore((state) => state.loans);
+    const stock = useAppStore((state) => state.stock);
     return (
         <main className="flex flex-col items-center">
         <section className="bg-red-200 mt-5">
             <article className="flex justify-around items-center p-1 w-72 bg-white shadow-sm rounded-md min-h-10">
                 <h2 className="font-semibold">Stock disponible</h2>
-                <span className="bg-green-300 p-2 rounded-md"><strong>$100.000</strong></span>
+                <span className="bg-green-300 p-2 rounded-md"><strong>${stock.toLocaleString("es-AR")}</strong></span>
             </article>
         </section>
 
@@ -16,12 +21,7 @@ const Dashboard = () => {
                 <h2 className="text-xl font-semibold">Historial</h2>
             </div>
             <div className="p-1 gap-2 flex flex-col items-center w-full">
-                <RecordCard />
-                <RecordCard />
-                <RecordCard />
-                <RecordCard />
-                <RecordCard />
-                <RecordCard />
+                {loans.length > 0 ? <RecordCard /> : <span>No hay historial</span>}
             </div>
         </section>
     </main>
