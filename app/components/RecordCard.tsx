@@ -15,21 +15,25 @@ export const RecordCard = () => {
         setId(newId !== id ? newId : null);
     }
 
-    const handleTogglePagado = (id: string, newStock: number, pagado: boolean) => {
+    const handleTogglePagado = (id: string, monto: number, pagado: boolean, interes: number) => {
         togglePagado(id);
+        const interesCalculado = (interes / 100) * monto;
         if(!pagado) {
-            updateStock(stock + newStock);
+            const newStock = stock + (monto + interesCalculado);
+            updateStock(newStock);
         }
-        else {   
-            updateStock(stock - newStock);
+        else {
+            const newStock = stock - (monto + interesCalculado);
+            updateStock(newStock);
         }
     }
+
 
     return (
         <>
         { loans.length > 0 ? (
             loans.map(client => (
-        <article key={client.id_loan} className="bg-white flex flex-col w-full min-h-16 shadow-sm border-zinc-200 border-[1px] rounded-md">
+        <article key={client.id_loan} className={`${client.pagado ? "bg-green-300" : "bg-white"} flex flex-col w-full min-h-16 shadow-sm border-zinc-200 border-[1px] rounded-md`}>
             
             <div className="flex flex-col justify-around font-semibold overflow-x-hidden">
                 <div className="flex justify-around items-center text-xs uppercase min-h-8 relative">
@@ -48,7 +52,7 @@ export const RecordCard = () => {
                 <span>Cantidad de cuotas: <span>{client.cantidad_cuotas}</span></span>
                 <span>Fecha de emisión: <span>{client.fecha_emision.toLocaleDateString("es-AR")}</span></span>
                 <span>Fecha de pago: <span>{client.fecha_pago.toLocaleDateString("es-AR")}</span></span>
-                <button onClick={() => handleTogglePagado(client.id_loan, Number(client.monto_prestamo), client.pagado)} className={`${!client.pagado ? "bg-yellow-300" : "bg-green-500"} p-2 rounded-md`}>
+                <button onClick={() => handleTogglePagado(client.id_loan, Number(client.monto_prestamo), client.pagado, Number(client.interes))} className={`${!client.pagado ? "bg-yellow-300" : "bg-green-500 text-white"} p-2 rounded-md`}>
                     {client.pagado ? "Pagado" : "Pendiente"}
                 </button>
             </div>

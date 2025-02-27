@@ -13,7 +13,7 @@ const Dashboard = () => {
         <section className="bg-red-200 mt-5">
             <article className="flex justify-around items-center p-1 w-72 bg-white shadow-sm rounded-md min-h-10">
                 <h2 className="font-semibold">Stock disponible</h2>
-                <span className="bg-green-300 p-2 rounded-md"><strong>${stock.toLocaleString("es-AR")}</strong></span>
+                <span className="bg-[#3648f5] text-white p-2 rounded-md"><strong>${Math.floor(stock).toLocaleString("es-AR")}</strong></span>
             </article>
         </section>
 

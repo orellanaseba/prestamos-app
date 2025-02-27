@@ -5,7 +5,7 @@ import { Input } from "@/app/components/Input";
 import { Button } from "@/app/components/Button";
 import { useAppStore } from "@/app/store/useAppStore";
 import { loanSchema } from "@/app/schemas/clientSchema";
-import React, { useState } from "react";
+import { useState } from "react";
 import { ZodError } from "zod";
 
 const Deal = () => {
@@ -26,13 +26,13 @@ const Deal = () => {
         const dni_cliente = formData.get("dni_cliente") as string;
         const client = clients.find(client => client.dni === dni_cliente)
         
-        const monto_prestamo = formData.get("monto_prestamo") as string;
-        const newStock = stock - +monto_prestamo;
-
         const interes = formData.get("interes") as string;
+        const monto_prestamo = formData.get("monto_prestamo") as string;
 
         const porcentajeInteres = Number(interes)/100;
         const agregarInteres = porcentajeInteres * Number(monto_prestamo);
+
+        const newStock = stock - (Number(monto_prestamo) + porcentajeInteres);
         
         const fecha_emision = new Date(formData.get("fecha_emision") as string);
         const fecha_pago = new Date(formData.get("fecha_pago") as string);
@@ -62,7 +62,7 @@ const Deal = () => {
                 newLoan(data);
                 console.log(data);
                 updateStock(newStock);
-                setTotal(Number(monto_prestamo) + Math.round(agregarInteres));
+                setTotal(Number(monto_prestamo) + Math.floor(agregarInteres));
                 setSuccess("Préstamo otorgado correctamente.");
             }
         }

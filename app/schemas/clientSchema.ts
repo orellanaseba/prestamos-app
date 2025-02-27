@@ -4,7 +4,8 @@ export const clientSchema = z.object({
     nombre: z.string()
     .min(5, { message: "El nombre debe tener mínimo 5 caracteres." })
     .max(30, { message: "El nombre no puede contener más de 30 caracteres." })
-    .regex(/^[a-zA-Z]+$/, { message: "El nombre solo puede contener letras." }),
+    .regex(/^[a-zA-Z\s]+$/, { message: "El nombre solo puede contener letras y espacios." })
+    ,
 
     dni: z.string()
     .min(8, { message: "El DNI debe contener 8 números sin puntos ni comas." })
