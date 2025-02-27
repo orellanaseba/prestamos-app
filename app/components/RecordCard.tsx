@@ -6,10 +6,23 @@ import { useAppStore } from "../store/useAppStore"
 
 export const RecordCard = () => {
     const loans = useAppStore((state) => state.loans);
+    const stock = useAppStore((state) => state.stock);
+    const togglePagado = useAppStore((state) => state.togglePagado);
+    const updateStock = useAppStore((state) => state.updateStock);
     const [id, setId] = useState<string | null>("");
 
     const handleOpenOptions = (newId: string) => {
         setId(newId !== id ? newId : null);
+    }
+
+    const handleTogglePagado = (id: string, newStock: number, pagado: boolean) => {
+        togglePagado(id);
+        if(!pagado) {
+            updateStock(stock + newStock);
+        }
+        else {   
+            updateStock(stock - newStock);
+        }
     }
 
     return (
@@ -33,9 +46,11 @@ export const RecordCard = () => {
                 <span>Monto: <span>${Number(client.monto_prestamo).toLocaleString("es-AR")}</span></span>
                 <span>Interés: <span>{ client.interes }%</span></span>
                 <span>Cantidad de cuotas: <span>{client.cantidad_cuotas}</span></span>
-                <span>Fecha de emisión: <span>{client.fecha_emision}</span></span>
-                <span>Fecha de pago: <span>{client.fecha_pago}</span></span>
-                <button className="bg-yellow-300 p-2 rounded-md">Pendiente</button>
+                <span>Fecha de emisión: <span>{client.fecha_emision.toLocaleDateString("es-AR")}</span></span>
+                <span>Fecha de pago: <span>{client.fecha_pago.toLocaleDateString("es-AR")}</span></span>
+                <button onClick={() => handleTogglePagado(client.id_loan, Number(client.monto_prestamo), client.pagado)} className={`${!client.pagado ? "bg-yellow-300" : "bg-green-500"} p-2 rounded-md`}>
+                    {client.pagado ? "Pagado" : "Pendiente"}
+                </button>
             </div>
         </article>
         ))

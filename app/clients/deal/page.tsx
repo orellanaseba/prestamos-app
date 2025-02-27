@@ -34,6 +34,9 @@ const Deal = () => {
         const porcentajeInteres = Number(interes)/100;
         const agregarInteres = porcentajeInteres * Number(monto_prestamo);
         
+        const fecha_emision = new Date(formData.get("fecha_emision") as string);
+        const fecha_pago = new Date(formData.get("fecha_pago") as string);
+
         const data = {
             id_loan: crypto.randomUUID(),
             nombre_cliente: client ? client.nombre : "",
@@ -41,8 +44,8 @@ const Deal = () => {
             cantidad_cuotas: formData.get("cantidad_cuotas") as string,
             interes: interes ? interes : "0",
             dni_cliente: formData.get("dni_cliente") as string,
-            fecha_emision: formData.get("fecha_emision") as string,
-            fecha_pago: formData.get("fecha_pago") as string,
+            fecha_emision: fecha_emision,
+            fecha_pago: fecha_pago,
             pagado: false,
         }
 

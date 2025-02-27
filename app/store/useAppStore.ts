@@ -9,6 +9,7 @@ interface AppState {
     deleteClient: (dni: string) => void;
     newLoan: (loan: Loan) => void;
     updateStock: (stock: number) => void;
+    togglePagado: (id: string) => void;
 }
 
 export const useAppStore = create<AppState>((set) => ({
@@ -20,5 +21,8 @@ export const useAppStore = create<AppState>((set) => ({
         clients: state.clients.filter(client => client.dni !== dni)
     })),
     newLoan: (loan) => set((state) => ({ loans: [...state.loans, loan] })),
-    updateStock: (newStock) => set(() => ({ stock: newStock }))
+    updateStock: (newStock) => set(() => ({ stock: newStock })),
+    togglePagado: (id) => set((state) => ({
+        loans: state.loans.map(loan => loan.id_loan === id ? { ...loan, pagado: !loan.pagado } : loan)
+    }))
 }))

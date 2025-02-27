@@ -12,7 +12,7 @@ export interface Loan {
     cantidad_cuotas: string;
     interes: string;
     dni_cliente: string;
-    fecha_emision: string;
-    fecha_pago: string;
+    fecha_emision: Date;
+    fecha_pago: Date;
     pagado: boolean;
 }
