@@ -1,9 +1,11 @@
 "use client"
 
-import { useState } from "react";
+import React, { useState } from "react";
 import { Client } from "../types"
 import { DotsIcon } from "./DotsIcon";
 import { Options } from "./Options";
+import Link from "next/link";
+import { ProfileIcon } from "./ProfileIcon";
 
 interface ClientProps {
     clients: Client[];
@@ -20,12 +22,12 @@ export const UserCard = ({ clients }: ClientProps) => {
         <>
         { clients.length > 0 ? (
         clients.map(client => (
-
         <article
         key={ client.dni }
         className="bg-white flex flex-col w-full min-h-16 shadow-sm border-zinc-200 border-[1px] relative rounded-md">
             <div className="flex flex-col justify-around font-semibold overflow-x-hidden">
                 <div className="flex justify-around items-center text-xs uppercase min-h-8 relative">
+                    <Link className="absolute left-1" href={`/record/${client.dni}/`}><ProfileIcon /></Link>
                     <span>Nombre</span>
                     <span>DNI</span>
                     <DotsIcon setId={() => handleOpenOptions(client.dni)} />

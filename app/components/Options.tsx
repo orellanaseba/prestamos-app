@@ -7,13 +7,16 @@ export const Options = ({ id } : { id: string; }) => {
     const deleteClient = useAppStore((state) => state.deleteClient);
 
     const handleBtnDelete = () => {
-        deleteClient(id);
+        const confirmarDelete = confirm("¿Seguro quieres eliminar este cliente?")
+        if(confirmarDelete) {
+            deleteClient(id);
+        }
     }
 
     return (
-        <div className="z-20 bg-white border-[1px] border-zinc-300 absolute right-0 top-7 flex flex-col justify-around items-center w-12 h-14 rounded-md">
-            <DeleteIcon btnDelete={handleBtnDelete} />
+        <div className="z-20 bg-white border-[1px] border-zinc-300 absolute right-0 top-7 flex flex-col justify-around items-center w-12 min-h-14 rounded-md">
             <EditIcon />
+            <DeleteIcon btnDelete={handleBtnDelete} />
         </div>
     )
 }
