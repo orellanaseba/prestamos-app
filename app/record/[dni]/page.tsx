@@ -11,7 +11,7 @@ const Record = () => {
     const dni = params.dni;
     const clients = useAppStore((state) => state.clients);
     const loans = useAppStore((state) => state.loans)
-    const [client, setClient] = useState<Client | undefined>();
+    const [, setClient] = useState<Client | undefined>();
     const [loan, setLoan] = useState<Loan[] | undefined>();
     const [id, setId] = useState<string | null>("");
 
@@ -32,11 +32,10 @@ const Record = () => {
     if(!clients) return <p>No hay clientes</p>
 
     return (
-        <>
-        <div>
-            <h1>Historial</h1>
-            <p>Nombre: {client?.nombre}</p>
-            <p>DNI: {dni}</p>
+        <section className="flex flex-col items-center">
+
+        <div className="flex justify-around items-center p-1 w-72 bg-white shadow-sm rounded-md min-h-10 mb-2 mt-5">
+            <h1 className="font-semibold">Historial</h1>
         </div>
         <div className="w-72 flex flex-col items-center mx-auto gap-2">
                 { loan && loan.length > 0 ? (
@@ -60,14 +59,15 @@ const Record = () => {
                         <span>Cantidad de cuotas: <span>{client.cantidad_cuotas}</span></span>
                         <span>Fecha de emisión: <span>{client.fecha_emision.toLocaleDateString("es-AR")}</span></span>
                         <span>Fecha de pago: <span>{client.fecha_pago.toLocaleDateString("es-AR")}</span></span>
+                        <span>¿Pagado? <span>{client.pagado ? "Pagado" : "Pendiente"}</span></span>
                     </div>
                 </article>
                 ))
                     
-            ) : null }
+            ) : <p>No hay préstamos emitidos.</p> }
         </div>
 
-        </>
+        </section>
     )
 }
 
