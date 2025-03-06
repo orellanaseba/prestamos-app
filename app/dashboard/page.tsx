@@ -7,7 +7,7 @@ const Dashboard = () => {
 
     const loans = useAppStore((state) => state.loans);
     const stock = useAppStore((state) => state.stock);
-    
+        
     return (
         <main className="flex flex-col items-center">
         <section className="bg-red-200 mt-5">

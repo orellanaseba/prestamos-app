@@ -34,8 +34,8 @@ const Deal = () => {
 
         const newStock = stock - (Number(monto_prestamo) + porcentajeInteres);
         
-        const fecha_emision = new Date(formData.get("fecha_emision") as string);
-        const fecha_pago = new Date(formData.get("fecha_pago") as string);
+        const fecha_emision = new Date(formData.get("fecha_emision") as string + "T00:00:00");
+        const fecha_pago = new Date(formData.get("fecha_pago") as string + "T00:00:00");
 
         const data = {
             id_loan: crypto.randomUUID(),

@@ -54,9 +54,33 @@ export const RecordCard = () => {
                 <span>Cantidad de cuotas: <span>{client.cantidad_cuotas}</span></span>
                 <span>Fecha de emisión: <span>{client.fecha_emision.toLocaleDateString("es-AR")}</span></span>
                 <span>Fecha de pago: <span>{client.fecha_pago.toLocaleDateString("es-AR")}</span></span>
-                <button onClick={() => handleTogglePagado(client.id_loan, Number(client.monto_prestamo), client.pagado, Number(client.interes))} className={`${!client.pagado ? "bg-yellow-300" : "bg-green-500 text-white"} p-2 rounded-md`}>
-                    {client.pagado ? "Pagado" : "Pendiente"}
-                </button>
+                <div className="flex items-end justify-between w-full">
+                    <button onClick={() => handleTogglePagado(client.id_loan, Number(client.monto_prestamo), client.pagado, Number(client.interes))} className={`${!client.pagado ? "bg-yellow-300" : "bg-green-500 text-white"} p-2 rounded-md`}>
+                        {client.pagado ? "Pagado" : "Pendiente"}
+                    </button>
+                    { +client.cantidad_cuotas == 2 || +client.cantidad_cuotas == 3 ? (
+
+                    <div className="flex flex-col items-center w-24 h-full justify-around">
+                        <div className="w-32">
+                            <span className="font-semibold">Cuotas pagadas</span>
+                        </div>
+                            { +client.cantidad_cuotas == 2 ? (
+                                <div className="flex items-center w-24 gap-1">
+                                    <input name="cuota_1" className="w-6 h-6" type="checkbox" />
+                                    <input name="cuota_2" className="w-6 h-6" type="checkbox" />
+                                </div>
+                            ) : null }
+                            { +client.cantidad_cuotas == 3 ? (
+                                <div className="flex items-center w-24 gap-1">
+                                    <input name="cuota_1" className="w-6 h-6" type="checkbox" />
+                                    <input name="cuota_2" className="w-6 h-6" type="checkbox" />
+                                    <input name="cuota_3" className="w-6 h-6" type="checkbox" />
+                                </div>
+                            ) : null }
+                    </div>
+                    ) : null }
+
+                </div>
             </div>
         </article>
         ))
