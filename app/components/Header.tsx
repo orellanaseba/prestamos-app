@@ -7,6 +7,7 @@ import { Hamburger } from "./Hamburger";
 import { useState } from "react";
 import Image from "next/image";
 import { Stock } from "./Stock";
+import axios from "axios";
 
 const MenuLink = ({ href, text } : { href: string; text: string }) => {
     const pathname = usePathname();
@@ -18,6 +19,18 @@ const MenuLink = ({ href, text } : { href: string; text: string }) => {
 
 const AsideMenu = () => {
 
+    const handleLogout = async() => {
+        try {
+            const res = await axios.post("/api/auth/logout")
+            if(res) {
+                window.location.href = "/login"
+            }
+        }
+        catch(err) {
+            console.log("Error", err);
+        }
+    }
+
     return (
         <aside className="flex flex-col bg-white absolute top-0 left-0 w-full md:w-72 h-[100vh] z-40">
             <ul className="mt-10 w-56 h-96 flex flex-col justify-around p-2 font-semibold text-xl">
@@ -25,13 +38,14 @@ const AsideMenu = () => {
                 <MenuLink href="/clients" text="Clientes" />
                 <MenuLink href="/clients/deal" text="Préstamos" />
                 <MenuLink href="#" text="Configuración" />
-                <MenuLink href="#" text="Cerrar sesión" />
+                <button className="text-start" onClick={handleLogout}>Cerrar sesión</button>
             </ul>
         </aside>
     )
 }
 
 export const Header = () => {
+    
     const path = usePathname();
 
     const [isOpen, setIsOpen] = useState(false);
@@ -49,12 +63,11 @@ export const Header = () => {
         <header className="fixed w-full -mt-12 z-50 bg-white flex justify-around items-center min-h-12 border-b-2 border-b-zinc-200">
             
             {isOpen ? <AsideMenu /> : null}
-
-            {path !== "/" ? (
+            {path !== "/" && path !== "/login" ? (
                 <>
                 <Hamburger styles={isOpen ? "rotate-90" : ""} handleOpenMenu={handleOpenMenu} />
                 <div className="absolute right-5 flex flex-col items-center">
-                    <Image onClick={handleOpenStock} className="w-5" src="/icons/dollar.png" width={24} height={24} alt="dollar icon" />
+                    <Image onClick={handleOpenStock} className="w-5 cursor-pointer" src="/icons/dollar.png" width={24} height={24} alt="dollar icon" />
                     {openStock && <Stock />}
                 </div>
                 </>
@@ -69,12 +82,9 @@ export const Header = () => {
                 </a>
             </button>
             </>
-
             )}
+
             <Link className="font-bold text-lg tracking-wide text-[#2a37d8]" href="/dashboard">Prestamón</Link>
-
-            
-
         </header>
     )
 }

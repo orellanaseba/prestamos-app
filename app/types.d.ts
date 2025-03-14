@@ -10,9 +10,12 @@ export interface Loan {
     nombre_cliente: string;
     monto_prestamo: string;
     cantidad_cuotas: string;
+    periodo_pago: string;
+    monto_cuotas: number;
     interes: string;
     dni_cliente: string;
     fecha_emision: Date;
     fecha_pago: Date;
     pagado: boolean;
+    cuotas_pagadas: boolean[];
 }

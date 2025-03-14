@@ -1,7 +1,7 @@
 "use client"
 
 import Image from "next/image"
-import { useState } from "react"
+import React, { useState } from "react"
 import { useAppStore } from "../store/useAppStore"
 
 export const RecordCard = () => {
@@ -10,10 +10,20 @@ export const RecordCard = () => {
     const togglePagado = useAppStore((state) => state.togglePagado);
     const updateStock = useAppStore((state) => state.updateStock);
     const [id, setId] = useState<string | null>("");
+    const updateCuotasPagadas = useAppStore((state) => state.updateCuotasPagadas);
 
     const handleOpenOptions = (newId: string) => {
         setId(newId !== id ? newId : null);
     }
+
+    const handleCuotaPagada = (loanId: string, cuotaIndex: number) => {
+        const loan = loans.find((loan) => loan.id_loan === loanId);
+        if (loan) {
+            const nuevasCuotas = [...loan.cuotas_pagadas];
+            nuevasCuotas[cuotaIndex] = !nuevasCuotas[cuotaIndex];
+            updateCuotasPagadas(loanId, nuevasCuotas);
+        }
+    };
 
     const handleTogglePagado = (id: string, monto: number, pagado: boolean, interes: number) => {
         togglePagado(id);
@@ -52,34 +62,43 @@ export const RecordCard = () => {
                 <span>Monto: <span>${Number(client.monto_prestamo).toLocaleString("es-AR")}</span></span>
                 <span>Interés: <span>{ client.interes }%</span></span>
                 <span>Cantidad de cuotas: <span>{client.cantidad_cuotas}</span></span>
+                {+client.cantidad_cuotas > 1 ? <span>Monto de cuotas: <span>${client.monto_cuotas.toLocaleString("es-AR")}</span></span> : null}
+                {+client.cantidad_cuotas == 2 ? (
+                    <div className="flex items-center gap-1">
+                        <span>Cuotas pagadas: </span>
+                        {Array.from({ length: Number(client.cantidad_cuotas) }).map((_, index) => (
+                            <input
+                                key={index}
+                                onChange={() => handleCuotaPagada(client.id_loan, index)}
+                                checked={client.cuotas_pagadas[index] || false}
+                                className="h-4 w-4"
+                                type="checkbox"
+                            />
+                        ))}
+                    </div>
+                ) : +client.cantidad_cuotas == 3 ? (
+                    <div className="flex items-center gap-1">
+                        <span>Cuotas pagadas: </span>
+                        {Array.from({ length: Number(client.cantidad_cuotas) }).map((_, index) => (
+                            <input
+                                key={index}
+                                onChange={() => handleCuotaPagada(client.id_loan, index)}
+                                checked={client.cuotas_pagadas[index] || false}
+                                className="h-4 w-4"
+                                type="checkbox"
+                            />
+                        ))}
+                    </div>
+                ) : null}
                 <span>Fecha de emisión: <span>{client.fecha_emision.toLocaleDateString("es-AR")}</span></span>
-                <span>Fecha de pago: <span>{client.fecha_pago.toLocaleDateString("es-AR")}</span></span>
+                <span>Fecha final de pago: <span>{client.fecha_pago.toLocaleDateString("es-AR")}</span></span>
+                <span>Período de pago: <span>{client.periodo_pago}</span></span>
                 <div className="flex items-end justify-between w-full">
-                    <button onClick={() => handleTogglePagado(client.id_loan, Number(client.monto_prestamo), client.pagado, Number(client.interes))} className={`${!client.pagado ? "bg-yellow-300" : "bg-green-500 text-white"} p-2 rounded-md`}>
+                    <button
+                    disabled={+client.cantidad_cuotas > 1 && !client.cuotas_pagadas.every(cuota => cuota)}
+                    onClick={() => handleTogglePagado(client.id_loan, Number(client.monto_prestamo), client.pagado, Number(client.interes))} className={`${!client.pagado ? "bg-yellow-300" : "bg-green-300"} border-[1px] shadow-sm border-zinc-200 p-2 rounded-md`}>
                         {client.pagado ? "Pagado" : "Pendiente"}
                     </button>
-                    { +client.cantidad_cuotas == 2 || +client.cantidad_cuotas == 3 ? (
-
-                    <div className="flex flex-col items-center w-24 h-full justify-around">
-                        <div className="w-32">
-                            <span className="font-semibold">Cuotas pagadas</span>
-                        </div>
-                            { +client.cantidad_cuotas == 2 ? (
-                                <div className="flex items-center w-24 gap-1">
-                                    <input name="cuota_1" className="w-6 h-6" type="checkbox" />
-                                    <input name="cuota_2" className="w-6 h-6" type="checkbox" />
-                                </div>
-                            ) : null }
-                            { +client.cantidad_cuotas == 3 ? (
-                                <div className="flex items-center w-24 gap-1">
-                                    <input name="cuota_1" className="w-6 h-6" type="checkbox" />
-                                    <input name="cuota_2" className="w-6 h-6" type="checkbox" />
-                                    <input name="cuota_3" className="w-6 h-6" type="checkbox" />
-                                </div>
-                            ) : null }
-                    </div>
-                    ) : null }
-
                 </div>
             </div>
         </article>

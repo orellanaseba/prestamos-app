@@ -5,6 +5,7 @@ import { useAppStore } from "../../store/useAppStore";
 import { useEffect, useState } from "react";
 import { Client, Loan } from "@/app/types";
 import Image from "next/image";
+import { useAuth } from "@/app/hooks/useAuth";
 
 const Record = () => {
     const params = useParams();
@@ -15,14 +16,15 @@ const Record = () => {
     const [loan, setLoan] = useState<Loan[] | undefined>();
     const [id, setId] = useState<string | null>("");
 
+    const { isAuthenticated } = useAuth();
 
     useEffect(() => {
         const foundClient = clients.find(client => client.dni === dni);
         setClient(foundClient);
 
-        const foundLoans = loans.filter(loan => loan.dni_cliente === dni);
+        const foundLoans = loans.filter(loan => loan.dni_cliente === dni && loan.pagado === true);
         setLoan(foundLoans);
-    }, [dni])
+    }, [dni, clients, loans])
 
 
     const handleOpen = (newId: string) => {
@@ -30,6 +32,9 @@ const Record = () => {
     }
 
     if(!clients) return <p>No hay clientes</p>
+
+    if(!isAuthenticated) return null;
+
 
     return (
         <section className="flex flex-col items-center">
@@ -57,8 +62,9 @@ const Record = () => {
                         <span>Monto: <span>${Number(client.monto_prestamo).toLocaleString("es-AR")}</span></span>
                         <span>Interés: <span>{ client.interes }%</span></span>
                         <span>Cantidad de cuotas: <span>{client.cantidad_cuotas}</span></span>
-                        <span>Fecha de emisión: <span>{client.fecha_emision.toLocaleString("es-AR")}</span></span>
-                        <span>Fecha de pago: <span>{client.fecha_pago.toLocaleString("es-AR")}</span></span>
+                        <span>Fecha de emisión: <span>{client.fecha_emision.toLocaleDateString("es-AR")}</span></span>
+                        <span>Fecha final de pago: <span>{client.fecha_pago.toLocaleDateString("es-AR")}</span></span>
+                        <span>Fecha final de pago: <span>{client.periodo_pago}</span></span>
                         <span>¿Pagado? <span>{client.pagado ? "Pagado" : "Pendiente"}</span></span>
                     </div>
                 </article>

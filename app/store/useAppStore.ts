@@ -10,6 +10,7 @@ interface AppState {
     newLoan: (loan: Loan) => void;
     updateStock: (stock: number) => void;
     togglePagado: (id: string) => void;
+    updateCuotasPagadas: (id: string, cuotas_pagadas: boolean[]) => void;
 }
 
 export const useAppStore = create<AppState>((set) => ({
@@ -24,5 +25,10 @@ export const useAppStore = create<AppState>((set) => ({
     updateStock: (newStock) => set(() => ({ stock: newStock })),
     togglePagado: (id) => set((state) => ({
         loans: state.loans.map(loan => loan.id_loan === id ? { ...loan, pagado: !loan.pagado } : loan)
-    }))
+    })),
+    updateCuotasPagadas: (id: string, cuotas_pagadas) => set((state) => ({
+        loans: state.loans.map((loan) =>
+            loan.id_loan === id ? { ...loan, cuotas_pagadas } : loan
+        ),
+    })),
 }))

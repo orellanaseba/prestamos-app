@@ -2,11 +2,16 @@
 
 import { RecordCard } from "../components/RecordCard";
 import { useAppStore } from "../store/useAppStore";
+import { useAuth } from "../hooks/useAuth";
 
 const Dashboard = () => {
 
+    const { isAuthenticated } = useAuth();
     const loans = useAppStore((state) => state.loans);
     const stock = useAppStore((state) => state.stock);
+
+
+    if(!isAuthenticated) return null;
         
     return (
         <main className="flex flex-col items-center">

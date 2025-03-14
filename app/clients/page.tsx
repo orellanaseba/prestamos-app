@@ -7,12 +7,14 @@ import { FormClient } from "../components/FormClient";
 import { UserCard } from "../components/UserCard";
 import { Input } from "../components/Input";
 import { useAppStore } from "../store/useAppStore";
+import { useAuth } from "../hooks/useAuth";
 
 const Clients = () => {
     const [openModal, setIsOpenModal] = useState(false);
     const [clientName, setClientName] = useState("");
     const [error, setError] = useState<{ message: string }[]>([]);
     const clients = useAppStore((state) => state.clients);
+    const { isAuthenticated } = useAuth();
     
     const handleOpenModal = () => {
         setIsOpenModal(!openModal);
@@ -21,6 +23,8 @@ const Clients = () => {
     const filteredClients = clients.filter(client => (
         client.nombre.toLowerCase().includes(clientName.toLowerCase())
     ))
+
+    if(!isAuthenticated) return null;
 
     return (
         <main className="flex flex-col items-center">
