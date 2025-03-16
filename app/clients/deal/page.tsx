@@ -52,7 +52,7 @@ const Deal = () => {
             cantidad_cuotas: formData.get("cantidad_cuotas") as string,
             periodo_pago: formData.get("periodo_pago") as string,
             monto_cuotas: monto_cuotas,
-            cuotas_pagadas: Array(Number(cantidad_cuotas)).fill(false),
+            cuotas_pagadas: Array(Number(cantidad_cuotas)).fill(0),
             interes: interes ? interes : "0",
             dni_cliente: formData.get("dni_cliente") as string,
             fecha_emision: fecha_emision,

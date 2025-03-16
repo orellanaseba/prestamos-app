@@ -9,6 +9,8 @@ export const RecordCard = () => {
     const stock = useAppStore((state) => state.stock);
     const togglePagado = useAppStore((state) => state.togglePagado);
     const updateStock = useAppStore((state) => state.updateStock);
+    const deleteLoan = useAppStore((state) => state.deleteLoan);
+    const addHistory = useAppStore((state) => state.addHistory);
     const [id, setId] = useState<string | null>("");
     const updateCuotasPagadas = useAppStore((state) => state.updateCuotasPagadas);
 
@@ -20,12 +22,26 @@ export const RecordCard = () => {
         const loan = loans.find((loan) => loan.id_loan === loanId);
         if (loan) {
             const nuevasCuotas = [...loan.cuotas_pagadas];
-            nuevasCuotas[cuotaIndex] = !nuevasCuotas[cuotaIndex];
+            if(nuevasCuotas[cuotaIndex] > 0) {
+                nuevasCuotas[cuotaIndex] = 0;
+                updateStock(stock - loan.monto_cuotas);
+            }
+            else {
+                nuevasCuotas[cuotaIndex] = loan.monto_cuotas;
+                updateStock(stock + loan.monto_cuotas)
+            }
             updateCuotasPagadas(loanId, nuevasCuotas);
         }
     };
 
     const handleTogglePagado = (id: string, monto: number, pagado: boolean, interes: number) => {
+        const findLoan = loans.find(l => l.id_loan === id);
+
+        if(findLoan?.cuotas_pagadas.every(l => l > 0)) {
+            togglePagado(id);
+            return;
+        }
+
         togglePagado(id);
         const interesCalculado = (interes / 100) * monto;
         if(!pagado) {
@@ -39,6 +55,15 @@ export const RecordCard = () => {
     }
 
     const sorted = [...loans].sort((a, b) => b.fecha_emision.getTime() - a.fecha_emision.getTime());
+
+
+    const handleDeleteLoan = (loanId: string) => {
+        const match = sorted.find(loan => loan.id_loan === loanId);
+        if(match) {
+            addHistory(match);
+            deleteLoan(loanId);
+        }
+    }
 
     return (
         <>
@@ -58,7 +83,7 @@ export const RecordCard = () => {
                     <span className="font-semibold text-xs">{client.dni_cliente}</span>
                 </div>
             </div>
-            <div className={`${id === client.id_loan ? "flex bg-zinc-50" : "hidden"} flex-col justify-around items-start gap-2 p-1 font-semibold text-xs min-h-20`}>
+            <div className={`${id === client.id_loan ? "flex bg-zinc-50" : "hidden"} flex-col justify-around items-start gap-2 p-2 font-semibold text-xs min-h-20`}>
                 <span>Monto: <span>${Number(client.monto_prestamo).toLocaleString("es-AR")}</span></span>
                 <span>Interés: <span>{ client.interes }%</span></span>
                 <span>Cantidad de cuotas: <span>{client.cantidad_cuotas}</span></span>
@@ -70,7 +95,7 @@ export const RecordCard = () => {
                             <input
                                 key={index}
                                 onChange={() => handleCuotaPagada(client.id_loan, index)}
-                                checked={client.cuotas_pagadas[index] || false}
+                                checked={client.cuotas_pagadas[index] > 0}
                                 className="h-4 w-4"
                                 type="checkbox"
                             />
@@ -83,7 +108,7 @@ export const RecordCard = () => {
                             <input
                                 key={index}
                                 onChange={() => handleCuotaPagada(client.id_loan, index)}
-                                checked={client.cuotas_pagadas[index] || false}
+                                checked={client.cuotas_pagadas[index] > 0}
                                 className="h-4 w-4"
                                 type="checkbox"
                             />
@@ -98,6 +123,12 @@ export const RecordCard = () => {
                     disabled={+client.cantidad_cuotas > 1 && !client.cuotas_pagadas.every(cuota => cuota)}
                     onClick={() => handleTogglePagado(client.id_loan, Number(client.monto_prestamo), client.pagado, Number(client.interes))} className={`${!client.pagado ? "bg-yellow-300" : "bg-green-300"} border-[1px] shadow-sm border-zinc-200 p-2 rounded-md`}>
                         {client.pagado ? "Pagado" : "Pendiente"}
+                    </button>
+                    <button
+                    className={`${client.pagado ? "block bg-red-400 border-[1px] shadow-sm border-zinc-200 p-2 rounded-md" : "hidden"}`}
+                    onClick={() => handleDeleteLoan(client.id_loan)}
+                    >
+                        Eliminar
                     </button>
                 </div>
             </div>

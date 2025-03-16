@@ -17,5 +17,5 @@ export interface Loan {
     fecha_emision: Date;
     fecha_pago: Date;
     pagado: boolean;
-    cuotas_pagadas: boolean[];
+    cuotas_pagadas: number[];
 }

@@ -11,10 +11,10 @@ const Record = () => {
     const params = useParams();
     const dni = params.dni;
     const clients = useAppStore((state) => state.clients);
-    const loans = useAppStore((state) => state.loans)
     const [, setClient] = useState<Client | undefined>();
-    const [loan, setLoan] = useState<Loan[] | undefined>();
+    const [foundHistory, setHistory] = useState<Loan[] | undefined>();
     const [id, setId] = useState<string | null>("");
+    const history = useAppStore((state) => state.history);
 
     const { isAuthenticated } = useAuth();
 
@@ -22,9 +22,9 @@ const Record = () => {
         const foundClient = clients.find(client => client.dni === dni);
         setClient(foundClient);
 
-        const foundLoans = loans.filter(loan => loan.dni_cliente === dni && loan.pagado === true);
-        setLoan(foundLoans);
-    }, [dni, clients, loans])
+        const foundLoans = history.filter(loan => loan.dni_cliente === dni && loan.pagado === true);
+        setHistory(foundLoans);
+    }, [dni, clients, history])
 
 
     const handleOpen = (newId: string) => {
@@ -35,7 +35,6 @@ const Record = () => {
 
     if(!isAuthenticated) return null;
 
-
     return (
         <section className="flex flex-col items-center">
 
@@ -43,8 +42,8 @@ const Record = () => {
             <h1 className="font-semibold">Historial</h1>
         </div>
         <div className="w-72 flex flex-col items-center mx-auto gap-2">
-                { loan && loan.length > 0 ? (
-                    loan.map(client => (
+                { foundHistory && foundHistory.length > 0 ? (
+                    foundHistory.map(client => (
                 <article key={client.id_loan} className="flex flex-col w-full min-h-16 shadow-sm bg-white border-zinc-200 border-[1px] rounded-md">
                     
                     <div className="flex flex-col justify-around font-semibold overflow-x-hidden">
