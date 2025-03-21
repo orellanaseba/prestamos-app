@@ -14,6 +14,7 @@ export const FormClient = ({ setError } : { setError: (error: { message: string 
         e.preventDefault();
         const formData = new FormData(e.currentTarget);
         const data = {
+            id_cliente: crypto.randomUUID(),
             nombre: formData.get("nombre") as string,
             dni: formData.get("dni") as string,
             email: formData.get("email") as string,
@@ -44,6 +45,7 @@ export const FormClient = ({ setError } : { setError: (error: { message: string 
             if(validateData) {
                 setError([]);
                 addClient(data);
+                console.log(data);
             }
         
         } catch (error) {

@@ -79,19 +79,19 @@ export const RecordCard = () => {
                     <Image onClick={() => handleOpenOptions(client.id_loan)} className={`${id === client.id_loan ? "rotate-180" : ""} w-5 absolute right-5`} src="/icons/arrow-down.png" width={48} height={48} alt="arrow down icon" />
                 </div>
                 <div className="flex justify-around items-center p-1">
-                    <span title="Sebastián Orellana" className="max-w-32 text-xs overflow-hidden text-ellipsis font-semibold">{client.nombre_cliente}</span>
+                    <span title={client.nombre_cliente} className="max-w-32 text-xs overflow-hidden text-ellipsis font-semibold">{client.nombre_cliente}</span>
                     <span className="font-semibold text-xs">{client.dni_cliente}</span>
                 </div>
             </div>
             <div className={`${id === client.id_loan ? "flex bg-zinc-50" : "hidden"} flex-col justify-around items-start gap-2 p-2 font-semibold text-xs min-h-20`}>
-                <span>Monto: <span>${Number(client.monto_prestamo).toLocaleString("es-AR")}</span></span>
+                <span>Monto: <span>${client.monto_prestamo.toLocaleString("es-AR")}</span></span>
                 <span>Interés: <span>{ client.interes }%</span></span>
                 <span>Cantidad de cuotas: <span>{client.cantidad_cuotas}</span></span>
-                {+client.cantidad_cuotas > 1 ? <span>Monto de cuotas: <span>${client.monto_cuotas.toLocaleString("es-AR")}</span></span> : null}
-                {+client.cantidad_cuotas == 2 ? (
+                {client.cantidad_cuotas > 1 ? <span>Monto de cuotas: <span>${client.monto_cuotas.toLocaleString("es-AR")}</span></span> : null}
+                {client.cantidad_cuotas == 2 ? (
                     <div className="flex items-center gap-1">
                         <span>Cuotas pagadas: </span>
-                        {Array.from({ length: Number(client.cantidad_cuotas) }).map((_, index) => (
+                        {Array.from({ length: client.cantidad_cuotas }).map((_, index) => (
                             <input
                                 key={index}
                                 onChange={() => handleCuotaPagada(client.id_loan, index)}
@@ -101,10 +101,10 @@ export const RecordCard = () => {
                             />
                         ))}
                     </div>
-                ) : +client.cantidad_cuotas == 3 ? (
+                ) : client.cantidad_cuotas == 3 ? (
                     <div className="flex items-center gap-1">
                         <span>Cuotas pagadas: </span>
-                        {Array.from({ length: Number(client.cantidad_cuotas) }).map((_, index) => (
+                        {Array.from({ length: client.cantidad_cuotas }).map((_, index) => (
                             <input
                                 key={index}
                                 onChange={() => handleCuotaPagada(client.id_loan, index)}
@@ -120,8 +120,8 @@ export const RecordCard = () => {
                 <span>Período de pago: <span>{client.periodo_pago}</span></span>
                 <div className="flex items-end justify-between w-full">
                     <button
-                    disabled={+client.cantidad_cuotas > 1 && !client.cuotas_pagadas.every(cuota => cuota)}
-                    onClick={() => handleTogglePagado(client.id_loan, Number(client.monto_prestamo), client.pagado, Number(client.interes))} className={`${!client.pagado ? "bg-yellow-300" : "bg-green-300"} border-[1px] shadow-sm border-zinc-200 p-2 rounded-md`}>
+                    disabled={client.cantidad_cuotas > 1 && !client.cuotas_pagadas.every(cuota => cuota)}
+                    onClick={() => handleTogglePagado(client.id_loan, client.monto_prestamo, client.pagado, client.interes)} className={`${!client.pagado ? "bg-yellow-300" : "bg-green-300"} border-[1px] shadow-sm border-zinc-200 p-2 rounded-md`}>
                         {client.pagado ? "Pagado" : "Pendiente"}
                     </button>
                     <button

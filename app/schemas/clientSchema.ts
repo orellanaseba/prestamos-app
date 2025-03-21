@@ -21,9 +21,8 @@ export const clientSchema = z.object({
 })
 
 export const loanSchema = z.object({
-    monto_prestamo: z.string()
-    .min(4, { message: "El monto mínimo son $1000." })
-    .regex(/^[^.,]+$/, { message: "El monto no debe contener puntos ni comas." }),
+    monto_prestamo: z.number()
+    .min(1000, { message: "El monto mínimo son $1000." }),
 
     fecha_emision: z.date({ message: "La fecha de emisión debe ser una fecha válida." }),
     fecha_pago: z.date({ message: "La fecha de pago debe ser una fecha válida." })

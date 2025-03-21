@@ -28,33 +28,34 @@ const Deal = () => {
         e.preventDefault();
 
         const formData = new FormData(e.currentTarget);
-        const dni_cliente = formData.get("dni_cliente") as string;
-        const client = clients.find(client => client.dni === dni_cliente)
+        const id_cliente = formData.get("id_cliente") as string;
+        const client = clients.find(client => client.id_cliente === id_cliente)
         
-        const interes = formData.get("interes") as string;
-        const monto_prestamo = formData.get("monto_prestamo") as string;
+        const interes = Number(formData.get("interes"));
+        const monto_prestamo = Number(formData.get("monto_prestamo"));
 
-        const porcentajeInteres = Number(interes)/100;
-        const agregarInteres = porcentajeInteres * Number(monto_prestamo);
+        const porcentajeInteres = interes/100;
+        const agregarInteres = porcentajeInteres * monto_prestamo;
 
-        const newStock = stock - (Number(monto_prestamo) + porcentajeInteres);
+        const newStock = stock - (monto_prestamo + porcentajeInteres);
         
         const fecha_emision = new Date(formData.get("fecha_emision") as string + "T00:00:00");
         const fecha_pago = new Date(formData.get("fecha_pago") as string + "T00:00:00");
 
-        const cantidad_cuotas = formData.get("cantidad_cuotas") as string;
-        const monto_cuotas = Math.round((agregarInteres + Number(monto_prestamo)) / Number(cantidad_cuotas));
+        const cantidad_cuotas = formData.get("cantidad_cuotas");
+        const monto_cuotas = Math.round((agregarInteres + monto_prestamo) / Number(cantidad_cuotas));
 
         const data = {
             id_loan: crypto.randomUUID(),
+            id_cliente: id_cliente,
             nombre_cliente: client ? client.nombre : "",
-            monto_prestamo: formData.get("monto_prestamo") as string,
-            cantidad_cuotas: formData.get("cantidad_cuotas") as string,
+            monto_prestamo: Number(formData.get("monto_prestamo")),
+            cantidad_cuotas: Number(formData.get("cantidad_cuotas")),
             periodo_pago: formData.get("periodo_pago") as string,
             monto_cuotas: monto_cuotas,
             cuotas_pagadas: Array(Number(cantidad_cuotas)).fill(0),
-            interes: interes ? interes : "0",
-            dni_cliente: formData.get("dni_cliente") as string,
+            interes: interes ? interes : 0,
+            dni_cliente: client?.dni as string,
             fecha_emision: fecha_emision,
             fecha_pago: fecha_pago,
             pagado: false,
@@ -63,7 +64,7 @@ const Deal = () => {
         try {
             const validateData = loanSchema.parse(data);
 
-            if(+monto_prestamo > stock) {
+            if(monto_prestamo > stock) {
                 alert("El monto es mayor que el stock.");
                 return;
             }
@@ -72,7 +73,7 @@ const Deal = () => {
                 setError([]);
                 newLoan(data);
                 updateStock(newStock);
-                setTotal(Number(monto_prestamo) + Math.floor(agregarInteres));
+                setTotal(monto_prestamo + Math.round(agregarInteres));
                 setSuccess("Préstamo otorgado correctamente.");
             }
         }
@@ -87,6 +88,7 @@ const Deal = () => {
     const { isAuthenticated } = useAuth();
     
     if(!isAuthenticated) return null;
+
 
     return (
         <main className="flex flex-col items-center min-h-96 w-full">
@@ -105,10 +107,10 @@ const Deal = () => {
                 <option value="mensual">Mensual</option>
             </select>
             <input className={STYLES} name="interes" type="number" placeholder="Porcentaje de interés" min={0} max={100} />
-            <select name="dni_cliente" className="p-2 bg-white border-[1px] border-zinc-300 focus:bg-zinc-100 outline-none w-full text-sm rounded-md shadow-xs min-h-10">
+            <select name="id_cliente" className="p-2 bg-white border-[1px] border-zinc-300 focus:bg-zinc-100 outline-none w-full text-sm rounded-md shadow-xs min-h-10">
                     <option disabled defaultValue="Seleccionar cliente">{clients.length > 0 ? "Seleccionar cliente" : "No hay clientes disponibles"}</option>
                 {clients.length > 0 ? (clients.map((client: Client) => (
-                    <option key={client.dni} value={`${client.dni}`}>{client.nombre} - {client.dni}</option>
+                    <option key={client.id_cliente} value={`${client.id_cliente}`}>{client.nombre} - {client.dni}</option>
                 ))
                 ) : null}
             </select>

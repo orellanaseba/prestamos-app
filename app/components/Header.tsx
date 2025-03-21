@@ -37,7 +37,6 @@ const AsideMenu = () => {
                 <MenuLink href="/dashboard" text="Inicio" />
                 <MenuLink href="/clients" text="Clientes" />
                 <MenuLink href="/clients/deal" text="Préstamos" />
-                <MenuLink href="#" text="Configuración" />
                 <button className="text-start" onClick={handleLogout}>Cerrar sesión</button>
             </ul>
         </aside>

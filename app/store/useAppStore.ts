@@ -7,13 +7,14 @@ interface AppState {
     loans: Loan[];
     history: Loan[];
     addClient: (client: Client) => void;
-    deleteClient: (dni: string) => void;
+    deleteClient: (id_cliente: string) => void;
     deleteLoan: (loanId: string) => void;
     newLoan: (loan: Loan) => void;
     addHistory: (history: Loan) => void;
     updateStock: (stock: number) => void;
     togglePagado: (id: string) => void;
     updateCuotasPagadas: (id: string, cuotas_pagadas: number[]) => void;
+    updateClient: (client: Client) => void;
 }
 
 export const useAppStore = create<AppState>((set) => ({
@@ -22,8 +23,8 @@ export const useAppStore = create<AppState>((set) => ({
     loans: [],
     history: [],
     addClient: (client) => set((state) => ({clients: [...state.clients, client] })),
-    deleteClient: (dni) => set((state) => ({
-        clients: state.clients.filter(client => client.dni !== dni)
+    deleteClient: (id_cliente) => set((state) => ({
+        clients: state.clients.filter(client => client.id_cliente !== id_cliente)
     })),
     deleteLoan: (loanId) => set((state) => ({
         loans: state.loans.filter(loan => loan.id_loan !== loanId)
@@ -39,4 +40,37 @@ export const useAppStore = create<AppState>((set) => ({
             loan.id_loan === id ? { ...loan, cuotas_pagadas } : loan
         ),
     })),
+    updateClient: (updatedClient) => set((state) => {
+        const clientExists = state.clients.some(client => client.id_cliente === updatedClient.id_cliente);
+        if (!clientExists) {
+            console.error(`Cliente con ID ${updatedClient.id_cliente} no encontrado.`);
+            return state; // No actualiza el estado si el cliente no existe
+        }
+    
+        // Obtener el cliente original antes de actualizar
+        const originalClient = state.clients.find(client => client.id_cliente === updatedClient.id_cliente);
+    
+        // Actualizar los clientes
+        const updatedClients = state.clients.map(client =>
+            client.id_cliente === updatedClient.id_cliente ? { ...client, ...updatedClient } : client
+        );
+    
+        // Si el DNI cambió, actualizar los préstamos asociados
+        if (originalClient?.dni !== updatedClient.dni) {
+            const updatedLoans = state.loans.map(loan =>
+                loan.dni_cliente === originalClient?.dni
+                    ? { ...loan, dni_cliente: updatedClient.dni }
+                    : loan
+            );
+    
+            return {
+                clients: updatedClients,
+                loans: updatedLoans, // Actualizar los préstamos en el estado global
+            };
+        }
+    
+        return {
+            clients: updatedClients,
+        };
+    }),
 }))

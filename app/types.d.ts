@@ -1,4 +1,5 @@
 export interface Client {
+    id_cliente?: string;
     nombre: string;
     dni: string;
     email: string;
@@ -7,12 +8,13 @@ export interface Client {
 
 export interface Loan {
     id_loan: string;
+    id_cliente: string;
     nombre_cliente: string;
-    monto_prestamo: string;
-    cantidad_cuotas: string;
+    monto_prestamo: number;
+    cantidad_cuotas: number;
     periodo_pago: string;
     monto_cuotas: number;
-    interes: string;
+    interes: number;
     dni_cliente: string;
     fecha_emision: Date;
     fecha_pago: Date;
