@@ -7,8 +7,9 @@ const createTables = async (): Promise<void> => {
     const sql = `
       -- Crear la tabla de clientes
       CREATE TABLE IF NOT EXISTS clients (
-          dni VARCHAR(8) PRIMARY KEY,
+          id_cliente UUID PRIMARY KEY,
           nombre VARCHAR(30) NOT NULL,
+          dni VARCHAR(8) UNIQUE NOT NULL,
           email VARCHAR(60) UNIQUE NOT NULL,
           numero_telefono VARCHAR(10) NOT NULL
       );
@@ -16,6 +17,7 @@ const createTables = async (): Promise<void> => {
       -- Crear la tabla de préstamos
       CREATE TABLE IF NOT EXISTS loans (
           id_loan VARCHAR(50) PRIMARY KEY,
+          id_cliente UUID REFERENCES clients(id_cliente) ON DELETE CASCADE,
           nombre_cliente VARCHAR(30) NOT NULL,
           monto_prestamo INTEGER NOT NULL,
           cantidad_cuotas INTEGER NOT NULL,
@@ -26,8 +28,7 @@ const createTables = async (): Promise<void> => {
           fecha_emision DATE NOT NULL,
           fecha_pago DATE NOT NULL,
           pagado BOOLEAN DEFAULT FALSE,
-          cuotas_pagadas INT[] DEFAULT '{}',
-          FOREIGN KEY (dni_cliente) REFERENCES clients(dni)
+          cuotas_pagadas INT[] DEFAULT '{}'
       );
     `;
 

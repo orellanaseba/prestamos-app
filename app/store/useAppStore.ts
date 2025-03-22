@@ -15,6 +15,7 @@ interface AppState {
     togglePagado: (id: string) => void;
     updateCuotasPagadas: (id: string, cuotas_pagadas: number[]) => void;
     updateClient: (client: Client) => void;
+    deleteHistory: (historyId: string) => void;
 }
 
 export const useAppStore = create<AppState>((set) => ({
@@ -26,9 +27,15 @@ export const useAppStore = create<AppState>((set) => ({
     deleteClient: (id_cliente) => set((state) => ({
         clients: state.clients.filter(client => client.id_cliente !== id_cliente)
     })),
+    
     deleteLoan: (loanId) => set((state) => ({
         loans: state.loans.filter(loan => loan.id_loan !== loanId)
     })),
+    
+    deleteHistory: (historyId) => set((state) => ({
+        history: state.history.filter(h => h.id_loan !== historyId)
+    })),
+
     newLoan: (loan) => set((state) => ({ loans: [...state.loans, loan] })),
     addHistory: (history) => set((state) => ({ history: [...state.history, history] })),
     updateStock: (newStock) => set(() => ({ stock: newStock })),

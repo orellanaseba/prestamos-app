@@ -9,15 +9,21 @@ import Image from "next/image";
 import { Stock } from "./Stock";
 import axios from "axios";
 
-const MenuLink = ({ href, text } : { href: string; text: string }) => {
+const MenuLink = ({ href, text, onClick } : { href: string; text: string; onClick?: () => void; }) => {
     const pathname = usePathname();
 
     return (
-        <Link className={`${ pathname === href ? "text-[#3648f5]" : "bg-white"}`} href={ href }>{ text }</Link>
+        <Link
+        className={`${ pathname === href ? "text-[#3648f5]" : "bg-white"}`}
+        href={ href }
+        onClick={onClick}
+        >
+        { text }
+        </Link>
     )
 }
 
-const AsideMenu = () => {
+const AsideMenu = ({ handleOpenMenu } : { handleOpenMenu: () => void; }) => {
 
     const handleLogout = async() => {
         try {
@@ -34,9 +40,9 @@ const AsideMenu = () => {
     return (
         <aside className="flex flex-col bg-white absolute top-0 left-0 w-full md:w-72 h-[100vh] z-40">
             <ul className="mt-10 w-56 h-96 flex flex-col justify-around p-2 font-semibold text-xl">
-                <MenuLink href="/dashboard" text="Inicio" />
-                <MenuLink href="/clients" text="Clientes" />
-                <MenuLink href="/clients/deal" text="Préstamos" />
+                <MenuLink onClick={handleOpenMenu} href="/dashboard" text="Inicio" />
+                <MenuLink onClick={handleOpenMenu} href="/clients" text="Clientes" />
+                <MenuLink onClick={handleOpenMenu} href="/clients/deal" text="Préstamos" />
                 <button className="text-start" onClick={handleLogout}>Cerrar sesión</button>
             </ul>
         </aside>
@@ -61,7 +67,7 @@ export const Header = () => {
     return (
         <header className="fixed w-full -mt-12 z-50 bg-white flex justify-around items-center min-h-12 border-b-2 border-b-zinc-200">
             
-            {isOpen ? <AsideMenu /> : null}
+            {isOpen ? <AsideMenu handleOpenMenu={handleOpenMenu} /> : null}
             {path !== "/" && path !== "/login" ? (
                 <>
                 <Hamburger styles={isOpen ? "rotate-90" : ""} handleOpenMenu={handleOpenMenu} />
