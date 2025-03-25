@@ -85,8 +85,8 @@ const Record = () => {
                         <span>Monto: <span>${client.monto_prestamo.toLocaleString("es-AR")}</span></span>
                         <span>Interés: <span>{ client.interes }%</span></span>
                         <span>Cantidad de cuotas: <span>{client.cantidad_cuotas}</span></span>
-                        <span>Fecha de emisión: <span>{client.fecha_emision.toLocaleDateString("es-AR")}</span></span>
-                        <span>Fecha final de pago: <span>{client.fecha_pago.toLocaleDateString("es-AR")}</span></span>
+                        <span>Fecha de emisión: <span>{new Date(client.fecha_emision).toLocaleDateString("es-AR")}</span></span>
+                        <span>Fecha final de pago: <span>{new Date(client.fecha_pago).toLocaleDateString("es-AR")}</span></span>
                         <span>Fecha final de pago: <span>{client.periodo_pago}</span></span>
                         <span>¿Pagado? <span>{client.pagado ? "Pagado" : "Pendiente"}</span></span>
                         <button

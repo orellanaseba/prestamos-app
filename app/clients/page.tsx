@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { PlusIcon } from "../components/PlusIcon";
 import { FormClient } from "../components/FormClient";
 
@@ -8,13 +8,34 @@ import { UserCard } from "../components/UserCard";
 import { Input } from "../components/Input";
 import { useAppStore } from "../store/useAppStore";
 import { useAuth } from "../hooks/useAuth";
+import { getClients } from "../api/queries/queries";
 
 const Clients = () => {
     const [openModal, setIsOpenModal] = useState(false);
     const [clientName, setClientName] = useState("");
     const [error, setError] = useState<{ message: string }[]>([]);
     const clients = useAppStore((state) => state.clients);
+    const setClients = useAppStore((state) => state.setClients);
     const { isAuthenticated } = useAuth();
+    const [loading, setLoading] = useState(false);
+
+    useEffect(() => {
+        const fetchClients = async () => {
+            setLoading(true);
+            try {
+                const data = await getClients();
+                setClients(data);
+                console.log(data);
+            }
+            catch(err) {
+                console.log("Error al obtener los clientes:", err);
+            }
+            finally {
+                setLoading(false);
+            }
+        }
+        fetchClients();
+    }, [setClients])
     
     const handleOpenModal = () => {
         setIsOpenModal(!openModal);
@@ -48,7 +69,11 @@ const Clients = () => {
                     <Input setClientName={setClientName} name="search" type="text" placeholder="Buscar cliente" />
                 </article>
                 <article className="flex flex-col items-center w-72 gap-2">
-                    <UserCard clients={filteredClients} />
+                    {loading ? (
+                        <p>Cargando...</p>
+                    ) : (
+                        <UserCard clients={filteredClients} />
+                    )}
                 </article>
             </section>
         </main>

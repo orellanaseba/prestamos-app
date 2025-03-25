@@ -3,6 +3,7 @@
 import Image from "next/image"
 import React, { useState } from "react"
 import { useAppStore } from "../store/useAppStore"
+import { deleteLoanDb } from "../api/queries/queries"
 
 export const RecordCard = () => {
     const loans = useAppStore((state) => state.loans);
@@ -54,14 +55,16 @@ export const RecordCard = () => {
         }
     }
 
-    const sorted = [...loans].sort((a, b) => b.fecha_emision.getTime() - a.fecha_emision.getTime());
+    const sorted = [...loans].sort((a, b) => new Date(b.fecha_emision).getTime() - new Date(a.fecha_emision).getTime());
 
 
     const handleDeleteLoan = (loanId: string) => {
         const match = sorted.find(loan => loan.id_loan === loanId);
         if(match) {
             addHistory(match);
+            alert("Préstamo eliminado y movido al historial.")
             deleteLoan(loanId);
+            deleteLoanDb(loanId);
         }
     }
 
@@ -115,8 +118,8 @@ export const RecordCard = () => {
                         ))}
                     </div>
                 ) : null}
-                <span>Fecha de emisión: <span>{client.fecha_emision.toLocaleDateString("es-AR")}</span></span>
-                <span>Fecha final de pago: <span>{client.fecha_pago.toLocaleDateString("es-AR")}</span></span>
+                <span>Fecha de emisión: <span>{new Date(client.fecha_emision).toLocaleDateString("es-AR")}</span></span>
+                <span>Fecha final de pago: <span>{new Date(client.fecha_pago).toLocaleDateString("es-AR")}</span></span>
                 <span>Período de pago: <span>{client.periodo_pago}</span></span>
                 <div className="flex items-end justify-between w-full">
                     <button

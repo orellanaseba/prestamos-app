@@ -5,9 +5,10 @@ import { Input } from "@/app/components/Input";
 import { Button } from "@/app/components/Button";
 import { useAppStore } from "@/app/store/useAppStore";
 import { loanSchema } from "@/app/schemas/clientSchema";
-import React, { useState } from "react";
+import { useState } from "react";
 import { ZodError } from "zod";
 import { useAuth } from "@/app/hooks/useAuth";
+import { createLoan } from "@/app/api/queries/queries";
 
 const Deal = () => {
     const newLoan = useAppStore((state) => state.newLoan);
@@ -24,7 +25,7 @@ const Deal = () => {
         setSelectedOption(e.target.value);
     } 
 
-    const handleFormData = (e: React.FormEvent<HTMLFormElement>) => {
+    const handleFormData = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
 
         const formData = new FormData(e.currentTarget);
@@ -72,6 +73,7 @@ const Deal = () => {
             if(validateData && clients.length > 0) {
                 setError([]);
                 newLoan(data);
+                await createLoan(data);
                 updateStock(newStock);
                 setTotal(monto_prestamo + Math.round(agregarInteres));
                 setSuccess("Préstamo otorgado correctamente.");

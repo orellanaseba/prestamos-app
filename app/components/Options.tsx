@@ -7,6 +7,7 @@ import { Button } from "./Button"
 import { Client } from "../types"
 import { clientSchema } from "../schemas/clientSchema"
 import { ZodError } from "zod"
+import { deleteclientDb, editarCliente } from "../api/queries/queries"
 
 export const Options = ({ id } : { id: string; }) => {
     const [error, setError] = useState<{ message: string }[]>([]);
@@ -17,10 +18,18 @@ export const Options = ({ id } : { id: string; }) => {
     const [data, setData] = useState<Client>()
     const STYLES = "p-2 bg-white border-[1px] border-zinc-300 focus:bg-zinc-100 outline-none w-full text-sm rounded-md shadow-xs";
 
-    const handleBtnDelete = () => {
+    const handleBtnDelete = async () => {
         const confirmarDelete = confirm("¿Seguro quieres eliminar este cliente?")
         if(confirmarDelete) {
-            deleteClient(id);
+            try {
+                await deleteclientDb(id);
+                deleteClient(id);
+            }
+            catch(err) {
+                alert("Error al eliminar el cliente");
+                console.log("Error al eliminar el cliente", err);
+                throw new Error("Error al eliminar el cliente");
+            }
         }
     }
 
@@ -67,6 +76,8 @@ export const Options = ({ id } : { id: string; }) => {
             if(validateData) {
                 setError([]);
                 updateClient(dataForm);
+                editarCliente(dataForm);
+                alert("Datos actualizados")
                 setEditModal(false)
                 console.log(dataForm);
             }

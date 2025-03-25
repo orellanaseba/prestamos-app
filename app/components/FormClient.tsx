@@ -3,6 +3,7 @@ import { Input } from "./Input"
 import { useAppStore } from "../store/useAppStore";
 import { clientSchema } from "../schemas/clientSchema";
 import { ZodError } from "zod";
+import { saveClientToDB } from "../api/queries/queries"
 
 export const FormClient = ({ setError } : { setError: (error: { message: string }[]) => void; }) => {
 
@@ -10,7 +11,7 @@ export const FormClient = ({ setError } : { setError: (error: { message: string 
     const addClient = useAppStore((state) => state.addClient);
 
     
-    const handleFormData = (e: React.FormEvent<HTMLFormElement>) => {
+    const handleFormData = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         const formData = new FormData(e.currentTarget);
         const data = {
@@ -45,6 +46,7 @@ export const FormClient = ({ setError } : { setError: (error: { message: string 
             if(validateData) {
                 setError([]);
                 addClient(data);
+                await saveClientToDB(data);
                 console.log(data);
             }
         

@@ -3,12 +3,29 @@
 import { RecordCard } from "../components/RecordCard";
 import { useAppStore } from "../store/useAppStore";
 import { useAuth } from "../hooks/useAuth";
+import { useEffect } from "react";
+import { getLoans } from "../api/queries/queries";
 
 const Dashboard = () => {
 
     const { isAuthenticated } = useAuth();
     const loans = useAppStore((state) => state.loans);
     const stock = useAppStore((state) => state.stock);
+    const setLoans = useAppStore((state) => state.setLoans);
+
+    useEffect(() => {
+        const fetchClients = async () => {
+            try {
+                const data = await getLoans();
+                setLoans(data);
+                console.log(data);
+            }
+            catch(err) {
+                console.log("Error al obtener los clientes:", err);
+            }
+        }
+        fetchClients();
+    }, [setLoans])
 
     if(!isAuthenticated) return null;
         
