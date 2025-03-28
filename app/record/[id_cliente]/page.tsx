@@ -39,7 +39,7 @@ const Record = () => {
         }
 
         fetchHistory();
-    }, [id_cliente])
+    }, [id_cliente, clients])
 
 
     const handleOpen = (newId: string) => {

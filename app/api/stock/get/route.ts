@@ -1,7 +1,7 @@
 import pool from "@/app/db/db";
-import { NextRequest, NextResponse } from "next/server";
+import { NextResponse } from "next/server";
 
-export const GET = async (req: NextRequest) => {
+export const GET = async () => {
     try {
         const result = await pool.query(`SELECT stock FROM stock`);
 

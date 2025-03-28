@@ -66,5 +66,5 @@ const createTable = async (): Promise<void> => {
   }
 }
 
-// createTables();
+createTables();
 createTable();

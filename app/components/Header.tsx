@@ -73,7 +73,7 @@ export const Header = () => {
         }
 
         updateStockHeader();
-    }, [])
+    }, [updateStock])
     
     return (
         <header className="fixed w-full -mt-12 z-50 bg-white flex justify-around items-center min-h-12 border-b-2 border-b-zinc-200">
