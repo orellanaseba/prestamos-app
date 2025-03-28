@@ -50,37 +50,15 @@ export const useAppStore = create<AppState>((set) => ({
             loan.id_loan === id ? { ...loan, cuotas_pagadas } : loan
         ),
     })),
-    updateClient: (updatedClient) => set((state) => {
-        const clientExists = state.clients.some(client => client.id_cliente === updatedClient.id_cliente);
-        if (!clientExists) {
-            console.error(`Cliente con ID ${updatedClient.id_cliente} no encontrado.`);
-            return state; // No actualiza el estado si el cliente no existe
-        }
-    
-        // Obtener el cliente original antes de actualizar
-        const originalClient = state.clients.find(client => client.id_cliente === updatedClient.id_cliente);
-    
-        // Actualizar los clientes
-        const updatedClients = state.clients.map(client =>
-            client.id_cliente === updatedClient.id_cliente ? { ...client, ...updatedClient } : client
-        );
-    
-        // Si el DNI cambió, actualizar los préstamos asociados
-        if (originalClient?.dni !== updatedClient.dni) {
-            const updatedLoans = state.loans.map(loan =>
-                loan.dni_cliente === originalClient?.dni
-                    ? { ...loan, dni_cliente: updatedClient.dni }
+    updateClient: (updatedClient) =>
+        set((state) => ({
+            clients: state.clients.map((client) =>
+                client.id_cliente === updatedClient.id_cliente ? updatedClient : client
+            ),
+            loans: state.loans.map((loan) =>
+                loan.id_cliente === updatedClient.id_cliente
+                    ? { ...loan, nombre_cliente: updatedClient.nombre, dni_cliente: updatedClient.dni }
                     : loan
-            );
-    
-            return {
-                clients: updatedClients,
-                loans: updatedLoans, // Actualizar los préstamos en el estado global
-            };
-        }
-    
-        return {
-            clients: updatedClients,
-        };
-    }),
+            ),
+        })),
 }))

@@ -3,7 +3,7 @@
 import Image from "next/image"
 import React, { useState } from "react"
 import { useAppStore } from "../store/useAppStore"
-import { deleteLoanDb } from "../api/queries/queries"
+import { addHistoryDb, deleteLoanDb, updateStockDb } from "../api/queries/queries"
 
 export const RecordCard = () => {
     const loans = useAppStore((state) => state.loans);
@@ -19,23 +19,40 @@ export const RecordCard = () => {
         setId(newId !== id ? newId : null);
     }
 
-    const handleCuotaPagada = (loanId: string, cuotaIndex: number) => {
+    const handleCuotaPagada = async (loanId: string, cuotaIndex: number) => {
         const loan = loans.find((loan) => loan.id_loan === loanId);
+
+        let newStock = stock;
+
         if (loan) {
             const nuevasCuotas = [...loan.cuotas_pagadas];
             if(nuevasCuotas[cuotaIndex] > 0) {
                 nuevasCuotas[cuotaIndex] = 0;
-                updateStock(stock - loan.monto_cuotas);
+                newStock -= loan.monto_cuotas;
+                // updateStock(stock - loan.monto_cuotas);
             }
             else {
                 nuevasCuotas[cuotaIndex] = loan.monto_cuotas;
-                updateStock(stock + loan.monto_cuotas)
+                newStock += loan.monto_cuotas;
+                // updateStock(stock + loan.monto_cuotas)
             }
-            updateCuotasPagadas(loanId, nuevasCuotas);
+
+            try {
+                newStock = Math.round(newStock);
+                
+                updateStock(newStock);
+                
+                await updateStockDb(newStock);
+                
+                updateCuotasPagadas(loanId, nuevasCuotas);
+            }
+            catch(err) {
+                console.error("Error al actualizar el stock", err);
+            }
         }
     };
 
-    const handleTogglePagado = (id: string, monto: number, pagado: boolean, interes: number) => {
+    const handleTogglePagado = async (id: string, monto: number, pagado: boolean, interes: number) => {
         const findLoan = loans.find(l => l.id_loan === id);
 
         if(findLoan?.cuotas_pagadas.every(l => l > 0)) {
@@ -47,10 +64,12 @@ export const RecordCard = () => {
         const interesCalculado = (interes / 100) * monto;
         if(!pagado) {
             const newStock = stock + (monto + interesCalculado);
+            await updateStockDb(newStock);
             updateStock(newStock);
         }
         else {
             const newStock = stock - (monto + interesCalculado);
+            await updateStockDb(newStock);
             updateStock(newStock);
         }
     }
@@ -58,13 +77,19 @@ export const RecordCard = () => {
     const sorted = [...loans].sort((a, b) => new Date(b.fecha_emision).getTime() - new Date(a.fecha_emision).getTime());
 
 
-    const handleDeleteLoan = (loanId: string) => {
+    const handleDeleteLoan = async (loanId: string) => {
         const match = sorted.find(loan => loan.id_loan === loanId);
         if(match) {
-            addHistory(match);
-            alert("Préstamo eliminado y movido al historial.")
-            deleteLoan(loanId);
-            deleteLoanDb(loanId);
+            try {
+                await addHistoryDb(match);
+                addHistory(match);
+                alert("Préstamo eliminado y movido al historial.")
+                deleteLoan(loanId);
+                deleteLoanDb(loanId);
+            }
+            catch(err) {
+                console.log("Error al guardar en el historial", err);
+            }
         }
     }
 

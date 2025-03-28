@@ -81,3 +81,55 @@ export const deleteLoanDb = async (id_loan: string) => {
         throw new Error("Error al eliminar el cliente");
     }
 }
+
+export const addHistoryDb = async (loan: Loan) => {
+    try {
+        const response = await axios.post("/api/history/create", loan);
+        return response.data; // Devuelve la respuesta del servidor
+    } catch (err) {
+        console.error("Error al guardar el historial:", err);
+        throw new Error("Error al guardar el historial");
+    }
+}
+
+export const getHistoryByClient = async (id_cliente: string) => {
+    try {
+        const response = await axios.get(`/api/history/get?id_cliente=${id_cliente}`);
+        return response.data; // Devuelve el historial específico
+    } catch (err) {
+        console.error("Error al obtener el historial:", err);
+        throw new Error("Error al obtener el historial");
+    }
+}
+
+export const deleteHistoryDb = async (id_loan: string) => {
+    try {
+        const response = await axios.delete("/api/history/delete", {
+            data: { id_loan }, // Enviar el `id_loan` en el cuerpo de la solicitud
+        });
+        return response.data; // Devuelve la respuesta del servidor
+    } catch (err) {
+        console.error("Error al eliminar el historial:", err);
+        throw new Error("Error al eliminar el historial");
+    }
+};
+
+export const getStockDb = async () => {
+    try {
+        const response = await axios.get("/api/stock/get");
+        return Number(response.data.stock);
+    } catch (err) {
+        console.error("Error al obtener el stock:", err);
+        throw new Error("Error al obtener el stock");
+    }
+}
+
+export const updateStockDb = async (newStock: number) => {
+    try {
+        const response = await axios.put("/api/stock/put", { newStock });
+        return response.data; // Devuelve la respuesta del servidor
+    } catch (err) {
+        console.error("Error al actualizar el stock:", err);
+        throw new Error("Error al actualizar el stock");
+    }
+}

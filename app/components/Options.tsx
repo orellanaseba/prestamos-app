@@ -41,7 +41,7 @@ export const Options = ({ id } : { id: string; }) => {
         }
     }
 
-    const handleEditForm = (e: React.FormEvent<HTMLFormElement>) => {
+    const handleEditForm = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         const formData = new FormData(e.currentTarget);
         
@@ -75,8 +75,8 @@ export const Options = ({ id } : { id: string; }) => {
             
             if(validateData) {
                 setError([]);
+                await editarCliente(dataForm);
                 updateClient(dataForm);
-                editarCliente(dataForm);
                 alert("Datos actualizados")
                 setEditModal(false)
                 console.log(dataForm);

@@ -47,7 +47,6 @@ export const FormClient = ({ setError } : { setError: (error: { message: string 
                 setError([]);
                 addClient(data);
                 await saveClientToDB(data);
-                console.log(data);
             }
         
         } catch (error) {

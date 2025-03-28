@@ -6,6 +6,7 @@ import { useEffect, useState } from "react";
 import { Client, Loan } from "@/app/types";
 import Image from "next/image";
 import { useAuth } from "@/app/hooks/useAuth";
+import { deleteHistoryDb, getHistoryByClient } from "@/app/api/queries/queries";
 
 const Record = () => {
     const { id_cliente } = useParams();
@@ -13,19 +14,32 @@ const Record = () => {
     const [client, setClient] = useState<Client | undefined>();
     const [foundHistory, setHistory] = useState<Loan[] | undefined>();
     const [id, setId] = useState<string | null>("");
-    const history = useAppStore((state) => state.history);
     const [open, setOpen] = useState(false);
     const deleteHistory = useAppStore((state) => state.deleteHistory);
 
     const { isAuthenticated } = useAuth();
 
     useEffect(() => {
-        const foundClient = clients.find(client => client.id_cliente === id_cliente);
-        setClient(foundClient);
+        const fetchHistory = async () => {
+            try {
+                if (typeof id_cliente === "string") {
+                    const data = await getHistoryByClient(id_cliente);
+                    setHistory(data);
+                    const foundClient = clients.find(client => client.id_cliente === id_cliente);
+                    setClient(foundClient);
 
-        const foundLoans = history.filter(loan => loan.id_cliente === id_cliente && loan.pagado === true);
-        setHistory(foundLoans);
-    }, [id_cliente, clients, history])
+                } else {
+                    console.error("Invalid id_cliente value:", id_cliente);
+                }
+                
+            }
+            catch(err) {
+                console.log("Error al obtener los datos del cliente", err);
+            }
+        }
+
+        fetchHistory();
+    }, [id_cliente])
 
 
     const handleOpen = (newId: string) => {
@@ -36,10 +50,23 @@ const Record = () => {
         setOpen(prev => !prev);
     }
 
+    const handleDeleteHistory = async (id_loan: string) => {
+        try {
+            await deleteHistoryDb(id_loan);
+            deleteHistory(id_loan);
+            console.log("Historial eliminado");
+            setHistory((prevHistory) => prevHistory?.filter((record) => record.id_loan !== id_loan));
+            
+        } catch (err) {
+            console.error("Error al eliminar el historial:", err);
+            alert("No se pudo eliminar el historial");
+        }
+    };
+
     if(!clients) return <p>No hay clientes</p>
 
     if(!isAuthenticated) return null;
-
+    
     return (
         <section className="flex flex-col items-center">
 
@@ -65,7 +92,7 @@ const Record = () => {
             </div>
         </section>
 
-        <div className={`${foundHistory && foundHistory.length > 0 ? "overflow-y-scroll" : ""} w-72 h-96  mt-2 flex flex-col items-center mx-auto gap-2`}>
+        <div className={`${foundHistory && foundHistory.length > 0 ? "overflow-y-scroll" : ""} w-72 min-h-20 mt-2 flex flex-col items-center mx-auto gap-2`}>
                 { foundHistory && foundHistory.length > 0 ? (
                     foundHistory.map(client => (
                 <article key={client.id_loan} className="flex flex-col w-full min-h-16 shadow-sm bg-white border-zinc-200 border-[1px] rounded-md">
@@ -90,7 +117,7 @@ const Record = () => {
                         <span>Fecha final de pago: <span>{client.periodo_pago}</span></span>
                         <span>¿Pagado? <span>{client.pagado ? "Pagado" : "Pendiente"}</span></span>
                         <button
-                        onClick={() => deleteHistory(client.id_loan)}
+                        onClick={() => handleDeleteHistory(client.id_loan)}
                         className={`${client.pagado ? "block bg-red-400 border-[1px] shadow-sm border-zinc-200 p-2 rounded-md" : "hidden"}`}
                         >
                         Eliminar

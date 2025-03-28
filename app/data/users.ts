@@ -6,8 +6,8 @@ interface User {
 
 export const users: User[] = [
     {
-        id: "1010",
-        username: "admin",
-        password: "admin"
+        id: "1",
+        username: "prestamonadmin",
+        password: "adminprestamon00@@"
     }
 ]

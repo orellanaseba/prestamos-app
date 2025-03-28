@@ -4,10 +4,12 @@ import Link from "next/link"
 import { WhatsappIcon } from "./WhatsappIcon"
 import { usePathname } from "next/navigation";
 import { Hamburger } from "./Hamburger";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Image from "next/image";
 import { Stock } from "./Stock";
 import axios from "axios";
+import { getStockDb } from "../api/queries/queries";
+import { useAppStore } from "../store/useAppStore";
 
 const MenuLink = ({ href, text, onClick } : { href: string; text: string; onClick?: () => void; }) => {
     const pathname = usePathname();
@@ -50,11 +52,11 @@ const AsideMenu = ({ handleOpenMenu } : { handleOpenMenu: () => void; }) => {
 }
 
 export const Header = () => {
-    
     const path = usePathname();
 
     const [isOpen, setIsOpen] = useState(false);
     const [openStock, setIsOpenStock] = useState(false);
+    const updateStock = useAppStore((state) => state.updateStock);
 
     const handleOpenMenu = () => {
         setIsOpen(!isOpen);
@@ -63,6 +65,15 @@ export const Header = () => {
     const handleOpenStock = () => {
         setIsOpenStock(prev => !prev);
     }
+
+    useEffect(() => {
+        const updateStockHeader = async () => {
+            const newStock = await getStockDb();
+            updateStock(newStock);
+        }
+
+        updateStockHeader();
+    }, [])
     
     return (
         <header className="fixed w-full -mt-12 z-50 bg-white flex justify-around items-center min-h-12 border-b-2 border-b-zinc-200">

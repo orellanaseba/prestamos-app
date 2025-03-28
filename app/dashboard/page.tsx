@@ -3,8 +3,8 @@
 import { RecordCard } from "../components/RecordCard";
 import { useAppStore } from "../store/useAppStore";
 import { useAuth } from "../hooks/useAuth";
-import { useEffect } from "react";
-import { getLoans } from "../api/queries/queries";
+import { useEffect, useState } from "react";
+import { getLoans, getStockDb } from "../api/queries/queries";
 
 const Dashboard = () => {
 
@@ -12,20 +12,31 @@ const Dashboard = () => {
     const loans = useAppStore((state) => state.loans);
     const stock = useAppStore((state) => state.stock);
     const setLoans = useAppStore((state) => state.setLoans);
+    const updateStock = useAppStore((state) => state.updateStock);
+    const [loading, setLoading] = useState(false);
 
     useEffect(() => {
         const fetchClients = async () => {
             try {
+                setLoading(true);
                 const data = await getLoans();
                 setLoans(data);
-                console.log(data);
+                const stockFromDb = await getStockDb();
+                if (typeof stockFromDb === "number") {
+                    updateStock(stockFromDb);
+                } else {
+                    console.error("El stock obtenido no es un número válido:", stockFromDb);
+                }
             }
             catch(err) {
                 console.log("Error al obtener los clientes:", err);
             }
+            finally {
+                setLoading(false);
+            }
         }
         fetchClients();
-    }, [setLoans])
+    }, [setLoans, updateStock])
 
     if(!isAuthenticated) return null;
         
@@ -34,7 +45,14 @@ const Dashboard = () => {
         <section className="bg-red-200 mt-5">
             <article className="flex justify-around items-center p-1 w-72 bg-white shadow-sm rounded-md min-h-10">
                 <h2 className="font-semibold">Stock disponible</h2>
-                <span className="bg-[#3648f5] text-white p-2 rounded-md"><strong>${Math.round(stock).toLocaleString("es-AR")}</strong></span>
+                <span className="bg-[#3648f5] text-white p-2 rounded-md">
+                    <strong>
+                        {loading ? "Cargando..." : (
+
+                            "$" + Math.round(stock).toLocaleString("es-AR")
+                        )}
+                    </strong>
+                    </span>
             </article>
         </section>
 

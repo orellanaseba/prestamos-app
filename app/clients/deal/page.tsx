@@ -8,7 +8,7 @@ import { loanSchema } from "@/app/schemas/clientSchema";
 import { useState } from "react";
 import { ZodError } from "zod";
 import { useAuth } from "@/app/hooks/useAuth";
-import { createLoan } from "@/app/api/queries/queries";
+import { createLoan, updateStockDb } from "@/app/api/queries/queries";
 
 const Deal = () => {
     const newLoan = useAppStore((state) => state.newLoan);
@@ -75,6 +75,7 @@ const Deal = () => {
                 newLoan(data);
                 await createLoan(data);
                 updateStock(newStock);
+                await updateStockDb(newStock);
                 setTotal(monto_prestamo + Math.round(agregarInteres));
                 setSuccess("Préstamo otorgado correctamente.");
             }

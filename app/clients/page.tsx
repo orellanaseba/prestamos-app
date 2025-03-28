@@ -25,7 +25,6 @@ const Clients = () => {
             try {
                 const data = await getClients();
                 setClients(data);
-                console.log(data);
             }
             catch(err) {
                 console.log("Error al obtener los clientes:", err);

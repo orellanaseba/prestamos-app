@@ -43,4 +43,28 @@ const createTables = async (): Promise<void> => {
   }
 };
 
-createTables();
+const createTable = async (): Promise<void> => {
+  try {
+    const client = await pool.connect();
+    const sql = `
+    CREATE TABLE stock (
+      id SERIAL PRIMARY KEY,
+      stock INTEGER NOT NULL
+    );
+
+    INSERT INTO stock (stock) VALUES (100000);
+`
+  await client.query(sql);
+  client.release();
+
+  }
+  catch(err) {
+    console.log("Error al crear la tabla", err);
+  }
+  finally {
+    await pool.end();
+  }
+}
+
+// createTables();
+createTable();
